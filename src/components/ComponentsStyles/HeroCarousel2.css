@@ -1,0 +1,80 @@
+:root {
+  --color-primary: #1a1a1a;
+  --color-secondary: #666666;
+  --color-secondary-light: #b3b3b3;
+  --color-accent: #d4b896;
+  --color-light: #f8f8f8;
+  --color-white: #ffffff;
+  --color-border: #e5e5e5;
+  
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 3rem;
+  --spacing-xl: 4rem;
+  --spacing-2xl: 6rem;
+  
+  --border-radius: 0.3rem;
+  --border-radius-lg: 0.5rem;
+  
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+  
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Carousel wrapper */
+.swiper {
+  width: 100%;
+  height: 67vh;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border-radius: none;
+}
+
+/* Slide image styling */
+.swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  border-radius: none;
+}
+
+/* Navigation arrows */
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--color-secondary);
+  background: transparent;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: background 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 16px;
+}
+
+/* Pagination dots */
+.swiper-pagination-bullet {
+display: none;
+}
+
+@media (max-width: 768px) {
+  .swiper {
+    height: 62vh;  
+  }
+}
