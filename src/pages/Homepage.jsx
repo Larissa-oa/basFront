@@ -12,7 +12,7 @@ import dining from '../assets/images/dining.jpg';
 import observer from '../assets/images/observer.webp';
 import dscene from '../assets/images/dscene.webp';
 import flore3 from '../assets/images/flore3.webp';
-import './PageStyles/Homepage.css';
+import './PageStyles/HomePage.css';
 
 const backendURL = 'http://localhost:5005';
 
