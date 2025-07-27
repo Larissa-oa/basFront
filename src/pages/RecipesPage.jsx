@@ -5,11 +5,10 @@ import axios from 'axios';
 import { FaTrash, FaPen, FaPlus, FaHeart, FaSearch, FaTimes } from 'react-icons/fa';
 import { scrollToTop } from '../utils/scrollToTop';
 import Modal from 'react-modal';
+import API_BASE_URL from '../config/api.js';
 import './PageStyles/RecipesPage.css';
 
 Modal.setAppElement('#root');
-
-const backendURL = 'http://localhost:5005';
 
 const RecipePage = () => {
   const { user, loading } = useContext(AuthContext);
@@ -36,7 +35,7 @@ const RecipePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${backendURL}/recipes`)
+    axios.get(`${API_BASE_URL}/recipes`)
       .then(res => {
         if (Array.isArray(res.data)) {
           setRecipes(res.data);
@@ -62,7 +61,7 @@ const RecipePage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`${backendURL}/recipes/${id}`, {
+      await axios.delete(`${API_BASE_URL}/recipes/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRecipes(prev => prev.filter(r => r._id !== id));
@@ -85,7 +84,7 @@ const RecipePage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.patch(`${backendURL}/auth/favorites/recipes/${recipeId}`, {}, {
+      const res = await axios.patch(`${API_BASE_URL}/auth/favorites/recipes/${recipeId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLikedRecipes(new Set(res.data.favoriteRecipes.map(id => id.toString())));
@@ -262,7 +261,7 @@ const RecipePage = () => {
       if (editingRecipe) {
         // Update existing recipe
         const response = await axios.put(
-          `${backendURL}/recipes/${editingRecipe._id}`,
+          `${API_BASE_URL}/recipes/${editingRecipe._id}`,
           formData,
           {
             headers: {
@@ -278,7 +277,7 @@ const RecipePage = () => {
         );
       } else {
         // Create new recipe
-        const response = await axios.post(`${backendURL}/recipes`, formData, {
+        const response = await axios.post(`${API_BASE_URL}/recipes`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`,
@@ -355,7 +354,7 @@ const RecipePage = () => {
                 <div className="recipe-image-container">
                   {recipe.headerImage ? (
                     <img
-                      src={`${backendURL}${recipe.headerImage}`}
+                      src={`${API_BASE_URL}${recipe.headerImage}`}
                       alt={recipe.title}
                       className="recipe-image"
                       onClick={() => {

@@ -3,9 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaTrash, FaPen, FaChevronLeft, FaChevronRight, FaArrowLeft } from 'react-icons/fa';
 import { AuthContext } from '../Context/AuthContext';
+import API_BASE_URL from '../config/api.js';
 import './PageStyles/JournalDetailPage.css'; 
-
-const API_BASE = "http://localhost:5005";
 
 const JournalDetailPage = () => {
   const { id } = useParams();
@@ -22,7 +21,7 @@ const JournalDetailPage = () => {
     const fetchJournal = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${API_BASE}/journals/${id}`);
+        const response = await axios.get(`${API_BASE_URL}/journals/${id}`);
         setJournal(response.data);
         setError(null);
       } catch (err) {
@@ -42,7 +41,7 @@ const JournalDetailPage = () => {
     if (window.confirm('Are you sure you want to delete this journal?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`${API_BASE}/journals/${id}`, {
+        await axios.delete(`${API_BASE_URL}/journals/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         alert('Journal deleted successfully!');
@@ -138,7 +137,7 @@ const JournalDetailPage = () => {
                 <img
                   src={journal.mainImage.startsWith('http') 
                     ? journal.mainImage 
-                    : `${API_BASE}${journal.mainImage}`}
+                    : `${API_BASE_URL}${journal.mainImage}`}
                   alt={journal.title}
                   className="main-image"
                   onError={(e) => {
@@ -239,7 +238,7 @@ const JournalDetailPage = () => {
                           <img
                             src={image.startsWith('http') 
                               ? image 
-                              : `${API_BASE}${image}`}
+                              : `${API_BASE_URL}${image}`}
                             alt={`Gallery image ${index + 1}`}
                             className="carousel-image"
                             onError={(e) => {

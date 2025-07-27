@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useState, useCallback } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api.js";
 
 export const AuthContext = createContext();
-const API_BASE = "http://localhost:5005";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const res = await axios.get(`${API_BASE}/auth/verify`, {
+          const res = await axios.get(`${API_BASE_URL}/auth/verify`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           setUser(res.data);
@@ -31,10 +31,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post(`${API_BASE}/auth/login`, { email, password });
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
       localStorage.setItem("token", res.data.authToken);
 
-      const userRes = await axios.get(`${API_BASE}/auth/verify`, {
+      const userRes = await axios.get(`${API_BASE_URL}/auth/verify`, {
         headers: { Authorization: `Bearer ${res.data.authToken}` },
       });
       setUser(userRes.data);

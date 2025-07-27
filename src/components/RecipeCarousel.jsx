@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { scrollToTop } from '../utils/scrollToTop';
+import API_BASE_URL from '../config/api.js';
 import './ComponentsStyles/RecipeCarousel.css'; 
 
 const RecipeCarousel = () => {
@@ -10,7 +11,7 @@ const RecipeCarousel = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('/recipes') 
+    axios.get(`${API_BASE_URL}/recipes`) 
       .then(res => {
         if (Array.isArray(res.data)) {
           setRecipes(res.data);

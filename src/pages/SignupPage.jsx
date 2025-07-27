@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../Context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api.js';
 import './PageStyles/AuthPages.css';
 
 const SignupPage = () => {
@@ -19,7 +20,7 @@ const SignupPage = () => {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('/auth/signup', form);
+      await axios.post(`${API_BASE_URL}/auth/signup`, form);
       await login(form.email, form.password);
       navigate('/');
     } catch (err) {

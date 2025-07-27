@@ -4,9 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaTrash, FaPen, FaPlus, FaImage, FaTimes, FaHeart, FaSearch } from 'react-icons/fa';
 import { scrollToTop } from '../utils/scrollToTop';
+import API_BASE_URL from '../config/api.js';
 import './PageStyles/JournalPage.css';
-
-const backendURL = 'http://localhost:5005';
 
 const JournalPage = () => {
   const { user, loading } = useContext(AuthContext);
@@ -45,7 +44,7 @@ const JournalPage = () => {
 
   const fetchJournals = async () => {
     try {
-      const response = await axios.get(`${backendURL}/journals`);
+      const response = await axios.get(`${API_BASE_URL}/journals`);
       if (Array.isArray(response.data)) {
         setJournals(response.data);
       } else {
@@ -66,7 +65,7 @@ const JournalPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.patch(`${backendURL}/auth/favorites/journals/${journalId}`, {}, {
+      const res = await axios.patch(`${API_BASE_URL}/auth/favorites/journals/${journalId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLikedJournals(new Set(res.data.favoriteJournals.map(id => id.toString())));
@@ -196,7 +195,7 @@ const JournalPage = () => {
     try {
       let response;
       if (editingJournal) {
-        response = await axios.put(`${backendURL}/journals/${editingJournal._id}`, formData, {
+        response = await axios.put(`${API_BASE_URL}/journals/${editingJournal._id}`, formData, {
           headers: { 
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
@@ -204,7 +203,7 @@ const JournalPage = () => {
         });
         setJournals(prev => prev.map(j => j._id === editingJournal._id ? response.data : j));
       } else {
-        response = await axios.post(`${backendURL}/journals`, formData, {
+        response = await axios.post(`${API_BASE_URL}/journals`, formData, {
           headers: { 
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
@@ -231,7 +230,7 @@ const JournalPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`${backendURL}/journals/${id}`, {
+      await axios.delete(`${API_BASE_URL}/journals/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setJournals(prev => prev.filter(j => j._id !== id));
@@ -316,7 +315,7 @@ const JournalPage = () => {
                 <div className="recipe-image-container">
                   {journal.mainImage ? (
                     <img
-                      src={`${backendURL}${journal.mainImage}`}
+                      src={`${API_BASE_URL}${journal.mainImage}`}
                       alt={journal.title}
                       className="recipe-image"
                       onClick={() => {

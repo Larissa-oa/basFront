@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ChevronLeft, ChevronRight, ArrowDown, ArrowRight } from 'lucide-react';
 import { scrollToTop } from '../utils/scrollToTop';
+import API_BASE_URL from '../config/api.js';
 import image6 from '../assets/images/image6.jpg';
 import image7 from '../assets/images/image7.jpg';
 import image8 from '../assets/images/image8.jpg';
@@ -13,8 +14,6 @@ import observer from '../assets/images/observer.webp';
 import dscene from '../assets/images/dscene.webp';
 import flore3 from '../assets/images/flore3.webp';
 import './PageStyles/HomePage.css';
-
-const backendURL = 'http://localhost:5005';
 
 const Homepage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -60,7 +59,7 @@ const Homepage = () => {
 
   useEffect(() => {
     // Fetch latest journals
-    axios.get(`${backendURL}/journals?limit=8&sort=-createdAt`)
+    axios.get(`${API_BASE_URL}/journals?limit=8&sort=-createdAt`)
       .then(res => {
         if (Array.isArray(res.data)) {
           setLatestJournals(res.data);
@@ -74,7 +73,7 @@ const Homepage = () => {
 
   useEffect(() => {
     // Fetch latest recipes
-    axios.get(`${backendURL}/recipes?limit=8&sort=-createdAt`)
+    axios.get(`${API_BASE_URL}/recipes?limit=8&sort=-createdAt`)
       .then(res => {
         if (Array.isArray(res.data)) {
           setRecipes(res.data);
@@ -207,7 +206,7 @@ const Homepage = () => {
                         </div>
                         {journal.mainImage ? (
                           <img
-                            src={`${backendURL}${journal.mainImage}`}
+                            src={`${API_BASE_URL}${journal.mainImage}`}
                             alt={journal.title}
                           />
                         ) : (
@@ -323,7 +322,7 @@ const Homepage = () => {
                           </div>
                           {recipe.headerImage ? (
                             <img
-                              src={`${backendURL}${recipe.headerImage}`}
+                              src={`${API_BASE_URL}${recipe.headerImage}`}
                               alt={recipe.title}
                             />
                           ) : (

@@ -4,9 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MdDelete, MdEdit, MdFavorite, MdRestaurant, MdBook } from "react-icons/md";
 import { scrollToTop } from "../utils/scrollToTop";
+import API_BASE_URL from "../config/api.js";
 import "./PageStyles/ProfilePage.css";
-
-const API_BASE = "http://localhost:5005";
 
 const ProfilePage = () => {
   const { user, loading, logout, setUser } = useContext(AuthContext);
@@ -34,10 +33,10 @@ const ProfilePage = () => {
       try {
         const token = localStorage.getItem("token");
         const [recipesRes, journalsRes] = await Promise.all([
-          axios.get(`${API_BASE}/auth/favorites/recipes`, {
+          axios.get(`${API_BASE_URL}/auth/favorites/recipes`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get(`${API_BASE}/auth/favorites/journals`, {
+          axios.get(`${API_BASE_URL}/auth/favorites/journals`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -60,7 +59,7 @@ const ProfilePage = () => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${API_BASE}/auth/favorites/${type}s/${id}`, {
+      await axios.delete(`${API_BASE_URL}/auth/favorites/${type}s/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -91,7 +90,7 @@ const ProfilePage = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.put(
-        `${API_BASE}/auth/${user._id}`,
+        `${API_BASE_URL}/auth/${user._id}`,
         { name: name.trim() },
         {
           headers: {
@@ -184,7 +183,7 @@ const ProfilePage = () => {
                   >
                     {recipe.headerImage ? (
                       <img
-                        src={`${API_BASE}${recipe.headerImage}`}
+                        src={`${API_BASE_URL}${recipe.headerImage}`}
                         alt={recipe.title}
                         className="nx-favorite-image"
                         onError={(e) => {
@@ -255,7 +254,7 @@ const ProfilePage = () => {
                   >
                     {journal.mainImage ? (
                       <img
-                        src={`${API_BASE}${journal.mainImage}`}
+                        src={`${API_BASE_URL}${journal.mainImage}`}
                         alt={journal.title}
                         className="nx-favorite-image"
                         onError={(e) => {

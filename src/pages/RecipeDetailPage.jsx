@@ -4,10 +4,10 @@ import axios from 'axios';
 import { AuthContext } from '../Context/AuthContext';
 import { FaTrash, FaPen, FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
 import Modal from 'react-modal';
+import API_BASE_URL from '../config/api.js';
 import './PageStyles/RecipeDetailPage.css';
 
 Modal.setAppElement('#root');
-const backendURL = 'http://localhost:5005';
 
 const RecipeDetailPage = () => {
   const { id } = useParams();
@@ -37,7 +37,7 @@ const RecipeDetailPage = () => {
   const MAX_PROCESS_IMAGES = 5;
 
   useEffect(() => {
-    axios.get(`${backendURL}/recipes/${id}`)
+    axios.get(`${API_BASE_URL}/recipes/${id}`)
       .then(res => {
         setRecipe(res.data);
         setLoading(false);
@@ -162,7 +162,7 @@ const RecipeDetailPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put(`${backendURL}/recipes/${id}`, formData, {
+      const response = await axios.put(`${API_BASE_URL}/recipes/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -185,7 +185,7 @@ const RecipeDetailPage = () => {
     if (!window.confirm('Are you sure you want to delete this recipe?')) return;
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`${backendURL}/recipes/${id}`, {
+      await axios.delete(`${API_BASE_URL}/recipes/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       navigate('/recipes');
@@ -216,7 +216,7 @@ const RecipeDetailPage = () => {
       <div className="recipe-layout">
         <div className="recipe-main-image">
           {recipe.headerImage ? (
-            <img src={`${backendURL}${recipe.headerImage}`} alt={recipe.title} />
+            <img src={`${API_BASE_URL}${recipe.headerImage}`} alt={recipe.title} />
           ) : (
             <div className="no-image-placeholder">No header image available</div>
           )}
@@ -297,7 +297,7 @@ const RecipeDetailPage = () => {
                     <div className="carousel-image-wrapper">
                       <div className="carousel-image-container">
                         <img
-                          src={`${backendURL}${img}`}
+                          src={`${API_BASE_URL}${img}`}
                           alt={`Step ${i + 1}`}
                           className="carousel-image"
                           onError={(e) => {
