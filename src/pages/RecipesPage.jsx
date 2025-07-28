@@ -6,6 +6,7 @@ import { FaTrash, FaPen, FaPlus, FaHeart, FaSearch, FaTimes } from 'react-icons/
 import { scrollToTop } from '../utils/scrollToTop';
 import Modal from 'react-modal';
 import API_BASE_URL from '../config/api.js';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 import './PageStyles/RecipesPage.css';
 
 Modal.setAppElement('#root');
@@ -228,44 +229,56 @@ const RecipePage = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('title', title.trim());
-    
-    // Add ingredients
-    validIngredients.forEach(ing => {
-      formData.append('ingredients', ing.trim());
-    });
-    
-    formData.append('instructions', instructions.trim());
-    
-    // Add optional fields only if they have values
-    if (prepTime && prepTime > 0) formData.append('prepTime', parseInt(prepTime));
-    if (cookTime && cookTime > 0) formData.append('cookTime', parseInt(cookTime));
-    if (servings && servings > 0) formData.append('servings', parseInt(servings));
-
-    // Add header image if selected
-    if (headerImage) {
-      formData.append('headerImage', headerImage);
-    }
-
-    // Add process images if selected
-    if (processImages.length > 0) {
-      processImages.forEach(image => {
-        formData.append('processImages', image);
-      });
-    }
-
     try {
       const token = localStorage.getItem('token');
+      
+      // Upload images to Cloudinary first
+      let headerImageUrl = null;
+      let processImageUrls = [];
+
+      if (headerImage) {
+        try {
+          headerImageUrl = await uploadToCloudinary(headerImage);
+        } catch (error) {
+          console.error('Error uploading header image:', error);
+          alert('Failed to upload header image. Please try again.');
+          return;
+        }
+      }
+
+      if (processImages.length > 0) {
+        try {
+          const uploadPromises = processImages.map(image => uploadToCloudinary(image));
+          processImageUrls = await Promise.all(uploadPromises);
+        } catch (error) {
+          console.error('Error uploading process images:', error);
+          alert('Failed to upload process images. Please try again.');
+          return;
+        }
+      }
+
+      // Prepare the data to send to backend
+      const recipeData = {
+        title: title.trim(),
+        ingredients: validIngredients.map(ing => ing.trim()),
+        instructions: instructions.trim(),
+        headerImage: headerImageUrl,
+        processImages: processImageUrls
+      };
+
+      // Add optional fields only if they have values
+      if (prepTime && prepTime > 0) recipeData.prepTime = parseInt(prepTime);
+      if (cookTime && cookTime > 0) recipeData.cookTime = parseInt(cookTime);
+      if (servings && servings > 0) recipeData.servings = parseInt(servings);
 
       if (editingRecipe) {
         // Update existing recipe
         const response = await axios.put(
           `${API_BASE_URL}/recipes/${editingRecipe._id}`,
-          formData,
+          recipeData,
           {
             headers: {
-              'Content-Type': 'multipart/form-data',
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
           }
@@ -277,9 +290,9 @@ const RecipePage = () => {
         );
       } else {
         // Create new recipe
-        const response = await axios.post(`${API_BASE_URL}/recipes`, formData, {
+        const response = await axios.post(`${API_BASE_URL}/recipes`, recipeData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
         });
@@ -354,7 +367,7 @@ const RecipePage = () => {
                 <div className="recipe-image-container">
                   {recipe.headerImage ? (
                     <img
-                      src={`${API_BASE_URL}${recipe.headerImage}`}
+                      src={recipe.headerImage.startsWith('http') ? recipe.headerImage : `${API_BASE_URL}${recipe.headerImage}`}
                       alt={recipe.title}
                       className="recipe-image"
                       onClick={() => {

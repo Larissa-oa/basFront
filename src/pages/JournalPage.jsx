@@ -5,6 +5,7 @@ import axios from 'axios';
 import { FaTrash, FaPen, FaPlus, FaImage, FaTimes, FaHeart, FaSearch } from 'react-icons/fa';
 import { scrollToTop } from '../utils/scrollToTop';
 import API_BASE_URL from '../config/api.js';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 import './PageStyles/JournalPage.css';
 
 const JournalPage = () => {
@@ -175,38 +176,54 @@ const JournalPage = () => {
 
     const token = localStorage.getItem('token');
     
-    const formData = new FormData();
-    formData.append('title', title);
-    if (text.trim()) {
-      formData.append('text', text);
-    }
-    
-    if (mainImage) {
-      formData.append('mainImage', mainImage);
-    }
-    
-    // Add all images to FormData
-    if (images.length > 0) {
-      images.forEach(image => {
-        formData.append('images', image);
-      });
-    }
-
     try {
+      // Upload images to Cloudinary first
+      let mainImageUrl = null;
+      let imageUrls = [];
+
+      if (mainImage) {
+        try {
+          mainImageUrl = await uploadToCloudinary(mainImage);
+        } catch (error) {
+          console.error('Error uploading main image:', error);
+          alert('Failed to upload main image. Please try again.');
+          return;
+        }
+      }
+
+      if (images.length > 0) {
+        try {
+          const uploadPromises = images.map(image => uploadToCloudinary(image));
+          imageUrls = await Promise.all(uploadPromises);
+        } catch (error) {
+          console.error('Error uploading images:', error);
+          alert('Failed to upload images. Please try again.');
+          return;
+        }
+      }
+
+      // Prepare the data to send to backend
+      const journalData = {
+        title: title,
+        text: text.trim(),
+        mainImage: mainImageUrl,
+        images: imageUrls
+      };
+
       let response;
       if (editingJournal) {
-        response = await axios.put(`${API_BASE_URL}/journals/${editingJournal._id}`, formData, {
+        response = await axios.put(`${API_BASE_URL}/journals/${editingJournal._id}`, journalData, {
           headers: { 
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'application/json'
           },
         });
         setJournals(prev => prev.map(j => j._id === editingJournal._id ? response.data : j));
       } else {
-        response = await axios.post(`${API_BASE_URL}/journals`, formData, {
+        response = await axios.post(`${API_BASE_URL}/journals`, journalData, {
           headers: { 
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'application/json'
           },
         });
         setJournals(prev => [response.data, ...prev]);
@@ -315,7 +332,7 @@ const JournalPage = () => {
                 <div className="recipe-image-container">
                   {journal.mainImage ? (
                     <img
-                      src={`${API_BASE_URL}${journal.mainImage}`}
+                      src={journal.mainImage.startsWith('http') ? journal.mainImage : `${API_BASE_URL}${journal.mainImage}`}
                       alt={journal.title}
                       className="recipe-image"
                       onClick={() => {

@@ -5,6 +5,7 @@ import { AuthContext } from '../Context/AuthContext';
 import { FaTrash, FaPen, FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
 import Modal from 'react-modal';
 import API_BASE_URL from '../config/api.js';
+import { uploadToCloudinary } from '../config/cloudinary.js';
 import './PageStyles/RecipeDetailPage.css';
 
 Modal.setAppElement('#root');
@@ -140,31 +141,50 @@ const RecipeDetailPage = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('title', title);
-    ingredients.forEach(ing => formData.append('ingredients', ing));
-    formData.append('instructions', instructions);
-    if (prepTime) formData.append('prepTime', prepTime);
-    if (cookTime) formData.append('cookTime', cookTime);
-    if (servings) formData.append('servings', servings);
-    
-    // Add header image if selected
-    if (headerImage) {
-      formData.append('headerImage', headerImage);
-    }
-
-    // Add process images if selected
-    if (newProcessImages.length > 0) {
-      newProcessImages.forEach(image => {
-        formData.append('processImages', image);
-      });
-    }
-
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put(`${API_BASE_URL}/recipes/${id}`, formData, {
+      
+      // Upload images to Cloudinary first
+      let headerImageUrl = null;
+      let processImageUrls = [];
+
+      if (headerImage) {
+        try {
+          headerImageUrl = await uploadToCloudinary(headerImage);
+        } catch (error) {
+          console.error('Error uploading header image:', error);
+          alert('Failed to upload header image. Please try again.');
+          return;
+        }
+      }
+
+      if (newProcessImages.length > 0) {
+        try {
+          const uploadPromises = newProcessImages.map(image => uploadToCloudinary(image));
+          processImageUrls = await Promise.all(uploadPromises);
+        } catch (error) {
+          console.error('Error uploading process images:', error);
+          alert('Failed to upload process images. Please try again.');
+          return;
+        }
+      }
+
+      // Prepare the data to send to backend
+      const recipeData = {
+        title: title,
+        ingredients: ingredients,
+        instructions: instructions,
+        headerImage: headerImageUrl,
+        processImages: processImageUrls
+      };
+
+      if (prepTime) recipeData.prepTime = prepTime;
+      if (cookTime) recipeData.cookTime = cookTime;
+      if (servings) recipeData.servings = servings;
+
+      const response = await axios.put(`${API_BASE_URL}/recipes/${id}`, recipeData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
@@ -216,7 +236,7 @@ const RecipeDetailPage = () => {
       <div className="recipe-layout">
         <div className="recipe-main-image">
           {recipe.headerImage ? (
-            <img src={`${API_BASE_URL}${recipe.headerImage}`} alt={recipe.title} />
+            <img src={recipe.headerImage.startsWith('http') ? recipe.headerImage : `${API_BASE_URL}${recipe.headerImage}`} alt={recipe.title} />
           ) : (
             <div className="no-image-placeholder">No header image available</div>
           )}
@@ -297,7 +317,7 @@ const RecipeDetailPage = () => {
                     <div className="carousel-image-wrapper">
                       <div className="carousel-image-container">
                         <img
-                          src={`${API_BASE_URL}${img}`}
+                          src={img.startsWith('http') ? img : `${API_BASE_URL}${img}`}
                           alt={`Step ${i + 1}`}
                           className="carousel-image"
                           onError={(e) => {

@@ -206,7 +206,7 @@ const Homepage = () => {
                         </div>
                         {journal.mainImage ? (
                           <img
-                            src={`${API_BASE_URL}${journal.mainImage}`}
+                            src={journal.mainImage.startsWith('http') ? journal.mainImage : `${API_BASE_URL}${journal.mainImage}`}
                             alt={journal.title}
                           />
                         ) : (
@@ -322,7 +322,7 @@ const Homepage = () => {
                           </div>
                           {recipe.headerImage ? (
                             <img
-                              src={`${API_BASE_URL}${recipe.headerImage}`}
+                              src={recipe.headerImage.startsWith('http') ? recipe.headerImage : `${API_BASE_URL}${recipe.headerImage}`}
                               alt={recipe.title}
                             />
                           ) : (
