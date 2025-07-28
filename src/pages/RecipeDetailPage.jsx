@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaTrash, FaPen, FaChevronLeft, FaChevronRight, FaArrowLeft, FaTimes } from 'react-icons/fa';
 import { AuthContext } from '../Context/AuthContext';
-import { FaTrash, FaPen, FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
-import Modal from 'react-modal';
 import API_BASE_URL from '../config/api.js';
 import { uploadToCloudinary } from '../config/cloudinary.js';
+import Modal from 'react-modal';
 import './PageStyles/RecipeDetailPage.css';
 
 Modal.setAppElement('#root');
@@ -271,81 +271,18 @@ const RecipeDetailPage = () => {
         </div>
       </div>
 
-      {/* Carousel outside recipe-layout */}
+      {/* Process Images Gallery */}
       {processImages.length > 0 && (
-        <div className="carousel-section">
-          <div className="carousel-header">
-            <h2 className="carousel-title">In the making</h2>
-          </div>
-
-          <div className="carousel-container">
-            {processImages.length > imagesPerView && (
-              <div className="carousel-nav">
-                <button
-                  onClick={prevImage}
-                  disabled={currentImageIndex === 0}
-                  className="nav-button"
-                  aria-label="Previous images"
-                >
-                  <FaChevronLeft className="nav-icon" />
-                </button>
-                <button
-                  onClick={nextImage}
-                  disabled={currentImageIndex >= maxIndex}
-                  className="nav-button"
-                  aria-label="Next images"
-                >
-                  <FaChevronRight className="nav-icon" />
-                </button>
-              </div>
-            )}
-
-            <div className="carousel-overflow">
-              <div
-                className="carousel-track"
-                style={{
-                  transform: `translateX(-${(currentImageIndex / processImages.length) * 100}%)`,
-                  width: `${(processImages.length / imagesPerView) * 100}%`,
-                }}
-              >
-                {processImages.map((img, i) => (
-                  <div
-                    key={i}
-                    className="carousel-slide"
-                    style={{ width: `${100 / processImages.length}%` }}
-                  >
-                    <div className="carousel-image-wrapper">
-                      <div className="carousel-image-container">
-                        <img
-                          src={img.startsWith('http') ? img : `${API_BASE_URL}${img}`}
-                          alt={`Step ${i + 1}`}
-                          className="carousel-image"
-                          onError={(e) => {
-                            e.target.style.opacity = '0.5';
-                            e.target.alt = 'Image failed to load';
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {processImages.length > imagesPerView && (
-              <div className="progress-indicator">
-                {Array.from({ 
-                  length: Math.ceil((processImages.length - imagesPerView + 1)) 
-                }).map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`progress-dot ${currentImageIndex === index ? 'active' : ''}`}
-                    aria-label={`Go to image set ${index + 1}`}
-                  />
-                ))}
-              </div>
-            )}
+        <div className="recipe-process-images">
+          <h3>In the making</h3>
+          <div className="process-images-gallery">
+            {processImages.map((image, index) => (
+              <img 
+                key={index} 
+                src={image.startsWith('http') ? image : `${API_BASE_URL}${image}`} 
+                alt={`Process image ${index + 1}`} 
+              />
+            ))}
           </div>
         </div>
       )}

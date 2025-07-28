@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { ChevronLeft, ChevronRight, ArrowDown, ArrowRight } from 'lucide-react';
+import { ArrowDown, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { scrollToTop } from '../utils/scrollToTop';
-import API_BASE_URL from '../config/api.js';
+import JournalSlider from '../components/JournalSlider';
+import RecipeSlider from '../components/RecipeSlider';
+import ScrollEffects from '../components/ScrollEffects';
 import image6 from '../assets/images/image6.jpg';
 import image7 from '../assets/images/image7.jpg';
 import image8 from '../assets/images/image8.jpg';
@@ -18,12 +19,7 @@ import './PageStyles/HomePage.css';
 const Homepage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [latestJournals, setLatestJournals] = useState([]);
-  const [recipes, setRecipes] = useState([]);
-  const [scrollY, setScrollY] = useState(0);
   const [currentFloreImage, setCurrentFloreImage] = useState(0);
-  const journalsSliderRef = useRef(null);
-  const recipesSliderRef = useRef(null);
   const heroRef = useRef(null);
   const navigate = useNavigate();
 
@@ -50,69 +46,12 @@ const Homepage = () => {
     return () => clearInterval(interval);
   }, [floreImages.length]);
 
-  // Parallax effect
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    // Fetch latest journals
-    axios.get(`${API_BASE_URL}/journals?limit=8&sort=-createdAt`)
-      .then(res => {
-        if (Array.isArray(res.data)) {
-          setLatestJournals(res.data);
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching journals:', err);
-        setLatestJournals([]);
-      });
-  }, []);
-
-  useEffect(() => {
-    // Fetch latest recipes
-    axios.get(`${API_BASE_URL}/recipes?limit=8&sort=-createdAt`)
-      .then(res => {
-        if (Array.isArray(res.data)) {
-          setRecipes(res.data);
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching recipes:', err);
-        setRecipes([]);
-      });
-  }, []);
-
-  const slideLeft = (ref) => {
-    if (ref.current) {
-      ref.current.scrollBy({ left: -400, behavior: 'smooth' });
-    }
-  };
-
-  const slideRight = (ref) => {
-    if (ref.current) {
-      ref.current.scrollBy({ left: 400, behavior: 'smooth' });
-    }
-  };
-
   const nextFloreImage = () => {
     setCurrentFloreImage((prev) => (prev + 1) % floreImages.length);
   };
 
   const prevFloreImage = () => {
     setCurrentFloreImage((prev) => (prev - 1 + floreImages.length) % floreImages.length);
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      year: 'numeric'
-    });
   };
 
   const scrollToNextSection = () => {
@@ -127,6 +66,9 @@ const Homepage = () => {
 
   return (
     <div className="homepage">
+      {/* Scroll Effects Component */}
+      <ScrollEffects />
+      
       {/* Hero Section */}
       <section className="hero" ref={heroRef}>
         <div className="hero-slides">
@@ -150,100 +92,18 @@ const Homepage = () => {
           <h1 className="hero-title">
             Crafting the Future of Flavor
           </h1>
-          <div className="hero-cta">
-            <button className="cta-button" onClick={scrollToNextSection}>
-              Explore Our Work
-              <ArrowDown size={18} />
-            </button>
           </div>
+
+        {/* Sleek Parallax Scroll Indicator */}
+        <div className="hero-scroll-indicator">
+          <span className="scroll-text">Scroll</span>
+          <div className="scroll-line"></div>
         </div>
 
-        <div className="hero-indicators">
-          {heroImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`indicator ${currentSlide === index ? 'active' : ''}`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
       </section>
 
-      {/* Experiments Section */}
-      {latestJournals.length > 0 && (
-        <section className="section experiments">
-          <div className="container">
-            <div className="slider-section">
-              <div className="section-header-content">
-                <h2 className="slider-title">Latest Experiments</h2>
-                <p className="section-intro">
-                  Discover our latest culinary innovations and experimental techniques that push the boundaries of flavor and presentation.
-                </p>
-                <button className="explore-button" onClick={() => {
-                  scrollToTop();
-                  navigate('/journals');
-                }}>
-                  Explore all
-                  <ArrowRight size={14} />
-                </button>
-              </div>
-              
-              <div className="slider-container">
-                <div className="slider" ref={journalsSliderRef}>
-                  {latestJournals.map((journal) => (
-                    <div 
-                      key={journal._id} 
-                      className="media-card"
-                      onClick={() => {
-                        scrollToTop();
-                        navigate(`/journals/${journal._id}`);
-                      }}
-                    >
-                      <div className="media-image">
-                        <div className="media-date">
-                          {formatDate(journal.createdAt)}
-                        </div>
-                        {journal.mainImage ? (
-                          <img
-                            src={journal.mainImage.startsWith('http') ? journal.mainImage : `${API_BASE_URL}${journal.mainImage}`}
-                            alt={journal.title}
-                          />
-                        ) : (
-                          <div className="media-placeholder">
-                            <span>No Image</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="media-content">
-                        <h3>{journal.title}</h3>
-                        <span className="media-timestamp">{formatDate(journal.createdAt)}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="slider-controls">
-                  <button 
-                    onClick={() => slideLeft(journalsSliderRef)}
-                    className="slider-btn prev"
-                    aria-label="Previous experiments"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                  <button 
-                    onClick={() => slideRight(journalsSliderRef)}
-                    className="slider-btn"
-                    aria-label="Next experiments"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Journal Slider Component */}
+      <JournalSlider />
 
       {/* Main Content */}
       <main className="main-content">
@@ -255,7 +115,11 @@ const Homepage = () => {
               <p className="showcase-subtitle">Wanna get to know us better?</p>
             </div>
             <div className="showcase-grid">
-              <div className="showcase-item large">
+              <div 
+                className="showcase-item large"
+                onClick={() => window.open('https://observer.com/2025/06/bas-van-kranen-flore-amsterdam-restaurant-vegetables-interview/', '_blank')}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="showcase-image">
                   <img src={observer} alt="Observer interview" />
                   <div className="showcase-overlay">
@@ -264,7 +128,11 @@ const Homepage = () => {
                   </div>
                 </div>
               </div>
-              <div className="showcase-item">
+              <div 
+                className="showcase-item"
+                onClick={() => window.open('https://www.designscene.net/2025/04/chef-bas-van-kranen.html', '_blank')}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="showcase-image">
                   <img src={dscene} alt="DSCENE interview" />
                   <div className="showcase-overlay">
@@ -273,12 +141,16 @@ const Homepage = () => {
                   </div>
                 </div>
               </div>
-              <div className="showcase-item">
+              <div 
+                className="showcase-item"
+                onClick={() => window.open('https://www.forbes.com/sites/rachel-dube/2025/07/18/bas-van-kranens-flore-intends-to-push-boundaries-in-every-way/', '_blank')}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="showcase-image">
-                  <img src={flore3} alt="Elite Traveler interview" />
+                  <img src={flore3} alt="Forbes interview" />
                   <div className="showcase-overlay">
-                    <h3>Flore: A Sustainable Fine Dining Success in Amsterdam</h3>
-                    <p>Restaurant of the Week: Hotel De L'Europe's latest fine dining concept offers locally sourced, carefully considered cuisine.</p>
+                    <h3>Forbes - Bas Van Kranen's Flore Intends To Push Boundaries In Every Way</h3>
+                    <p>He wants it to spark a larger conversation on awareness.</p>
                   </div>
                 </div>
               </div>
@@ -286,80 +158,8 @@ const Homepage = () => {
           </div>
         </section>
         
-        {/* Recipes Section */}
-        {recipes.length > 0 && (
-          <section className="section recipes">
-            <div className="container">
-              <div className="slider-section">
-                <div className="section-header-content">
-                  <h2 className="slider-title">Featured Recipes</h2>
-                  <p className="section-intro">
-                    Explore our curated collection of innovative recipes that showcase our unique approach to modern gastronomy.
-                  </p>
-                  <button className="explore-button" onClick={() => {
-                    scrollToTop();
-                    navigate('/recipes');
-                  }}>
-                    Explore all
-                    <ArrowRight size={14} />
-                  </button>
-                </div>
-                
-                <div className="slider-container">
-                  <div className="slider" ref={recipesSliderRef}>
-                    {recipes.map((recipe) => (
-                      <div 
-                        key={recipe._id} 
-                        className="media-card"
-                        onClick={() => {
-                          scrollToTop();
-                          navigate(`/recipes/${recipe._id}`);
-                        }}
-                      >
-                        <div className="media-image">
-                          <div className="media-date">
-                            {formatDate(recipe.createdAt)}
-                          </div>
-                          {recipe.headerImage ? (
-                            <img
-                              src={recipe.headerImage.startsWith('http') ? recipe.headerImage : `${API_BASE_URL}${recipe.headerImage}`}
-                              alt={recipe.title}
-                            />
-                          ) : (
-                            <div className="media-placeholder">
-                              <span>No Image</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="media-content">
-                          <h3>{recipe.title}</h3>
-                          <span className="media-timestamp">{formatDate(recipe.createdAt)}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="slider-controls">
-                    <button 
-                      onClick={() => slideLeft(recipesSliderRef)}
-                      className="slider-btn prev"
-                      aria-label="Previous recipes"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                    <button 
-                      onClick={() => slideRight(recipesSliderRef)}
-                      className="slider-btn"
-                      aria-label="Next recipes"
-                    >
-                      <ChevronRight size={20} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
+        {/* Recipe Slider Component */}
+        <RecipeSlider />
 
         {/* Flore Section */}
         <section className="section flore">

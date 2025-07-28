@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 /* Root Variables - Matching your design system */
 :root {
   --color-primary: #1a1a1a;
@@ -11,6 +9,12 @@
   --color-border: #e5e5e5;
   
   --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
   
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
@@ -137,12 +141,13 @@ body, html {
 }
 
 .about-name {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: var(--font-weight-light);
   color: var(--color-primary);
-  line-height: 1.2;
+  margin: 0 0 var(--spacing-md);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .about-divider {
@@ -161,12 +166,12 @@ body, html {
 }
 
 .about-description {
+  font-family: var(--font-primary);
   font-size: 1.125rem;
-  line-height: 1.8;
+  font-weight: var(--font-weight-normal);
+  line-height: 1.7;
   color: var(--color-secondary);
-  margin: 0;
-  font-weight: 400;
-  max-width: 65ch;
+  margin-bottom: var(--spacing-md);
 }
 
 .about-description:first-child {

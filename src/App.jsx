@@ -19,25 +19,27 @@ function App() {
   useScrollToTop();
 
   return (
-    <>
+    <div className="app-layout">
       <Navbar />
-
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/flore" element={<FlorePage />} />
-        <Route path="/recipes" element={<RecipesPage />} />
-        <Route path="/recipes/:id" element={<RecipeDetailPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/journals" element={<JournalPage />} />
-        <Route path="/journals/:id" element={<JournalDetailPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        {/* Add more routes as needed */}
-      </Routes>
+      
+      <main className="main-content-wrapper">
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/flore" element={<FlorePage />} />
+          <Route path="/recipes" element={<RecipesPage />} />
+          <Route path="/recipes/:id" element={<RecipeDetailPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/journals" element={<JournalPage />} />
+          <Route path="/journals/:id" element={<JournalDetailPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          {/* Add more routes as needed */}
+        </Routes>
+      </main>
 
       <Footer />
-</>
+    </div>
   );
 }
 

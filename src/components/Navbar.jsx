@@ -1,123 +1,165 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { MdAccountCircle } from "react-icons/md";
+import React, { useState, useEffect, useContext } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { GiHamburgerMenu } from 'react-icons/gi';
-import { IoIosCloseCircleOutline } from "react-icons/io";
+import { AuthContext } from '../Context/AuthContext';
+import { 
+  Menu, 
+  X, 
+  User, 
+  Home,
+  BookOpen,
+  ChefHat,
+  Building2,
+  UserCircle
+} from 'lucide-react';
 import '../components/ComponentsStyles/Navbar.css';
-import { AuthContext } from '../Context/AuthContext';  // Import your AuthContext
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext);  // Get user from context
-  const [isOpen, setIsOpen] = useState(false);
+  const { user } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);  
-  const menuRef = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === '/';
 
-  const handleHamburgerClick = () => {
-    setIsOpen(prev => !prev);
-  };
-
-  const handleMenuClick = () => {
-    setIsMenuOpen(prev => !prev);
-    // Close mobile menu when dropdown is opened
-    if (!isMenuOpen) {
-      setIsOpen(false);
-    }
-  };
-
-  // Function to close all menus
-  const closeAllMenus = () => {
-    setIsOpen(false);
-    setIsMenuOpen(false);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (isMenuOpen && menuRef.current && !menuRef.current.contains(e.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isMenuOpen]);
-
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
-
-    handleScroll();
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const navigationItems = [
+    { name: 'FoodLab', path: '/journals', icon: BookOpen },
+    { name: 'Recipes', path: '/recipes', icon: ChefHat },
+    { name: 'Restaurant Flore', path: '/flore', icon: Building2 },
+    { name: 'Bas Van Kranen', path: '/about', icon: UserCircle },
+  ];
+
   return (
     <>
-      <nav className={`navbar ${isOpen || isMenuOpen ? 'menu-open' : ''} ${scrolled || !isHome ? 'scrolled' : ''}`}>
-        <NavLink to="/" className="nav-logo" onClick={closeAllMenus}>食研</NavLink>
-
-        <div className={`nav-links ${isOpen ? 'open' : ''}`}>
-          {isOpen && (
-            <button
-              className="close-btn-navbar"
-              onClick={() => setIsOpen(false)}
-            >
-              <IoIosCloseCircleOutline />
-            </button>
-          )}
-          <NavLink to="/about" className="nav-link" onClick={closeAllMenus}>About</NavLink>
-
-          <button
-            className="menu-btn-navbar"
-            onClick={handleMenuClick}
-            aria-expanded={isMenuOpen}
-            aria-controls="menu-dropdown-list"
-          >
-            Menu +
-          </button>
-
-          <NavLink to={user ? "/profile" : "/signup"} className="nav-link" id="icon-account" title={user ? "Profile" : "Sign Up"} onClick={closeAllMenus}>
-            <MdAccountCircle />
+      {/* Desktop Thin Sidebar */}
+      <nav className={`navbar-sidebar ${scrolled || !isHome ? 'scrolled' : ''} ${isMenuOpen ? 'expanded' : ''}`}>
+        <div className="sidebar-header">
+          <NavLink to="/" className="sidebar-logo" onClick={closeMenu}>
+            食研
           </NavLink>
         </div>
 
-        <button
-          className="hamburger"
-          onClick={handleHamburgerClick}
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-        >
-          <GiHamburgerMenu />
-        </button>
+        <div className="sidebar-content">
+          <div className="sidebar-nav">
+            <NavLink 
+              to="/" 
+              className="sidebar-nav-item"
+              onClick={closeMenu}
+            >
+              <Home size={18} />
+            </NavLink>
+
+            <button
+              className="sidebar-nav-item menu-trigger"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+
+            <NavLink 
+              to={user ? "/profile" : "/signup"} 
+              className="sidebar-nav-item"
+              onClick={closeMenu}
+            >
+              <User size={18} />
+            </NavLink>
+          </div>
+
+          {/* Expandable Menu */}
+          <div className={`expanded-menu ${isMenuOpen ? 'open' : ''}`}>
+            <div className="menu-items">
+              {navigationItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className="menu-item"
+                  onClick={closeMenu}
+                >
+                  <item.icon size={16} />
+                  <span>{item.name}</span>
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        </div>
       </nav>
 
-      {/* Dropdown menu as a separate element outside the navbar */}
-      {isMenuOpen && (
-        <div
-          className="dropdown-list sidebar-mode"
-          id="menu-dropdown-list"
-          ref={menuRef}
-        >
+      {/* Mobile Top Navigation */}
+      <nav className={`navbar-mobile ${scrolled || !isHome ? 'scrolled' : ''}`}>
+        <div className="mobile-nav-content">
+          <NavLink to="/" className="mobile-logo" onClick={closeMenu}>
+            食研
+          </NavLink>
+
           <button
-            className="close-btn-dropdown"
-            onClick={() => setIsMenuOpen(false)}
-            aria-label="Close dropdown"
+            className="mobile-menu-btn"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle mobile menu"
           >
-            <IoIosCloseCircleOutline />
+            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <NavLink to="/journals" className="dropdown-link" onClick={closeAllMenus}>FoodLab</NavLink>
-          <NavLink to="/recipes" className="dropdown-link" onClick={closeAllMenus}>Recipes</NavLink>
-          <NavLink to="/flore" className="dropdown-link" onClick={closeAllMenus}>Restaurant Flore</NavLink>
-          <NavLink to="/about" className="dropdown-link" onClick={closeAllMenus}>Bas Van Kranen</NavLink>
         </div>
-      )}
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="mobile-menu-overlay" onClick={() => setIsMenuOpen(false)}>
+            <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+              <div className="mobile-menu-header">
+                <h3>Menu</h3>
+                <button 
+                  className="close-mobile-btn"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="mobile-menu-items">
+                <NavLink 
+                  to="/" 
+                  className="mobile-menu-item"
+                  onClick={closeMenu}
+                >
+                  <Home size={18} />
+                  <span>Home</span>
+                </NavLink>
+
+                {navigationItems.map((item) => (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className="mobile-menu-item"
+                    onClick={closeMenu}
+                  >
+                    <item.icon size={18} />
+                    <span>{item.name}</span>
+                  </NavLink>
+                ))}
+
+                <NavLink 
+                  to={user ? "/profile" : "/signup"} 
+                  className="mobile-menu-item"
+                  onClick={closeMenu}
+                >
+                  <User size={18} />
+                  <span>{user ? 'Profile' : 'Sign Up'}</span>
+                </NavLink>
+              </div>
+            </div>
+          </div>
+        )}
+      </nav>
     </>
   );
 };

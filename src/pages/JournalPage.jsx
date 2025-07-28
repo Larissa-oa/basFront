@@ -285,7 +285,7 @@ const JournalPage = () => {
       <div className="recipe-header">
         <div className="header-content">
           <h1 className="recipe-title">FoodLab</h1>
-          <p className="recipe-subtitle">Every dish begins with curiosity and the courage to experiment. It’s not about perfection. It’s about discovery, learning, and sharing moments that inspire us all. Join me on this ever-evolving journey.”s</p>
+          <p className="recipe-subtitle">Every dish begins with curiosity and the courage to experiment. It's not about perfection. It's about discovery, learning, and sharing moments that inspire us all. Join me on this ever-evolving journey.</p>
         </div>
       </div>
 

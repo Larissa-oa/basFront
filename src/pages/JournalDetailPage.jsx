@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FaTrash, FaPen, FaChevronLeft, FaChevronRight, FaArrowLeft } from 'react-icons/fa';
 import { AuthContext } from '../Context/AuthContext';
 import API_BASE_URL from '../config/api.js';
-import './PageStyles/JournalDetailPage.css'; 
+import './PageStyles/JournalDetailPage.css';
 
 const JournalDetailPage = () => {
   const { id } = useParams();
@@ -158,7 +158,7 @@ const JournalDetailPage = () => {
               {/* Title and Date */}
               <div className="title-section">
                  <button onClick={handleBack} className="back-button">
-             ← Back
+             ← Back to Journals
             </button>
                 <h1 className="journal-title">
                   {journal.title}
@@ -190,83 +190,18 @@ const JournalDetailPage = () => {
           </div>
         </div>
 
-        {/* Image Carousel - Bottom Section */}
+        {/* Behind the Process Gallery */}
         {journal.images && journal.images.length > 0 && (
-          <div className="carousel-section">
-            <div className="carousel-header">
-              <h2 className="carousel-title">Behind the process</h2>
-            </div>
-
-            <div className="carousel-container">
-              {/* Navigation Arrows */}
-              {journal.images.length > imagesPerView && (
-                <div className="carousel-nav">
-                  <button
-                    onClick={prevImage}
-                    disabled={currentImageIndex === 0}
-                    className="nav-button"
-                  >
-                    <FaChevronLeft className="nav-icon" />
-                  </button>
-                  <button
-                    onClick={nextImage}
-                    disabled={currentImageIndex >= maxIndex}
-                    className="nav-button"
-                  >
-                    <FaChevronRight className="nav-icon" />
-                  </button>
-                </div>
-              )}
-
-              {/* Carousel */}
-              <div className="carousel-overflow">
-                <div 
-                  className="carousel-track"
-                  style={{ 
-                    transform: `translateX(-${(currentImageIndex / journal.images.length) * 100}%)`,
-                    width: `${(journal.images.length / imagesPerView) * 100}%`
-                  }}
-                >
-                  {journal.images.map((image, index) => (
-                    <div 
-                      key={index} 
-                      className="carousel-slide"
-                      style={{ width: `${100 / journal.images.length}%` }}
-                    >
-                      <div className="carousel-image-wrapper">
-                        <div className="carousel-image-container">
-                          <img
-                            src={image.startsWith('http') 
-                              ? image 
-                              : `${API_BASE_URL}${image}`}
-                            alt={`Gallery image ${index + 1}`}
-                            className="carousel-image"
-                            onError={(e) => {
-                              e.target.style.opacity = '0.5';
-                              e.target.alt = 'Image failed to load';
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Progress Indicator */}
-              {journal.images.length > imagesPerView && (
-                <div className="progress-indicator">
-                  {Array.from({ 
-                    length: Math.ceil((journal.images.length - imagesPerView + 1)) 
-                  }).map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`progress-dot ${currentImageIndex === index ? 'active' : ''}`}
-                    />
-                  ))}
-                </div>
-              )}
+          <div className="journal-process-images">
+            <h3>Behind the process</h3>
+            <div className="process-images-gallery">
+              {journal.images.map((image, index) => (
+                <img 
+                  key={index} 
+                  src={image.startsWith('http') ? image : `${API_BASE_URL}${image}`} 
+                  alt={`Process image ${index + 1}`} 
+                />
+              ))}
             </div>
           </div>
         )}
