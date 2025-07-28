@@ -1,8 +1,34 @@
 // Cloudinary configuration for frontend
 const CLOUDINARY_CLOUD_NAME = 'do8nqb1cm';
-const CLOUDINARY_UPLOAD_PRESET = 'ml_default'; // You can create a custom preset in your Cloudinary dashboard
+const CLOUDINARY_UPLOAD_PRESET = 'basfront'; // We'll create this preset
 
+// Upload through backend (more secure)
 export const uploadToCloudinary = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/upload/cloudinary`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Upload error:', errorData);
+      throw new Error(`Upload failed: ${errorData.error || response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.secure_url;
+  } catch (error) {
+    console.error('Error uploading via backend:', error);
+    throw error;
+  }
+};
+
+// Direct upload to Cloudinary (fallback)
+export const uploadToCloudinaryDirect = async (file) => {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
@@ -18,7 +44,9 @@ export const uploadToCloudinary = async (file) => {
     );
 
     if (!response.ok) {
-      throw new Error('Upload failed');
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Cloudinary upload error:', errorData);
+      throw new Error(`Upload failed: ${errorData.error?.message || response.statusText}`);
     }
 
     const data = await response.json();
@@ -48,5 +76,6 @@ export default {
   cloudName: CLOUDINARY_CLOUD_NAME,
   uploadPreset: CLOUDINARY_UPLOAD_PRESET,
   uploadToCloudinary,
+  uploadToCloudinaryDirect,
   getCloudinaryUrl
 }; 
