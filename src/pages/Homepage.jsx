@@ -149,8 +149,8 @@ const Homepage = () => {
                 <div className="showcase-image">
                   <img src={flore3} alt="Forbes interview" />
                   <div className="showcase-overlay">
-                    <h3>Forbes - Bas Van Kranen's Flore Intends To Push Boundaries In Every Way</h3>
-                    <p>He wants it to spark a larger conversation on awareness.</p>
+                    <h3>Bas Van Kranen's Flore Intends To Push Boundaries In Every Way</h3>
+                    <p>FORBES - The chef wants to spark a larger conversation on awareness of what goes on in the dairy industry.</p>
                   </div>
                 </div>
               </div>
