@@ -1609,8 +1609,8 @@ body {
   }
   
   .hero {
-    height: 90vh;
-    min-height: 600px;
+    height: 100vh;
+    min-height: 100vh;
   }
   
   .hero-content {
@@ -1832,8 +1832,8 @@ body {
 
 @media (max-width: 480px) {
   .hero {
-    height: 85vh;
-    min-height: 500px;
+    height: 100vh;
+    min-height: 100vh;
   }
   
   .hero-content {
