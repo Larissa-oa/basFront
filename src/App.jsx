@@ -1,4 +1,4 @@
-import {Routes, Route } from 'react-router-dom';
+import {Routes, Route, useLocation } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -17,12 +17,17 @@ import ProfilePage from './pages/ProfilePage';
 
 function App() {
   useScrollToTop();
+  const location = useLocation();
+  
+  // Pages that should have background images extending behind navbar
+  const pagesWithBackground = ['/', '/flore'];
+  const isBackgroundPage = pagesWithBackground.includes(location.pathname);
 
   return (
-    <div className="app-layout">
+    <div className={`app-layout ${isBackgroundPage ? 'background-page' : ''}`}>
       <Navbar />
       
-      <main className="main-content-wrapper">
+      <main className={`main-content-wrapper ${isBackgroundPage ? 'background-page' : ''}`}>
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/about" element={<AboutPage />} />

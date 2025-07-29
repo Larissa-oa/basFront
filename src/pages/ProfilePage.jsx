@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { MdDelete, MdEdit, MdFavorite, MdRestaurant, MdBook } from "react-icons/md";
+import { MdDelete, MdEdit, MdFavorite, MdRestaurant, MdBook, MdLogout } from "react-icons/md";
 import { scrollToTop } from "../utils/scrollToTop";
 import API_BASE_URL from "../config/api.js";
+import floreBackground from "../assets/images/florebackground.jpg";
 import "./PageStyles/ProfilePage.css";
 
 const ProfilePage = () => {
@@ -121,6 +122,11 @@ const ProfilePage = () => {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   const handleFavoriteClick = (type, id) => {
     scrollToTop();
     navigate(`/${type}s/${id}`);
@@ -130,8 +136,36 @@ const ProfilePage = () => {
   if (!user) return <p className="nx-no-user-state">You must be logged in to view your profile.</p>;
 
   return (
-    <main className="nx-profile-container">
+    <main 
+      className="nx-profile-container"
+      style={{
+        backgroundImage: `url(${floreBackground})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       <section className="nx-hero-section">
+        {/* Top Action Buttons */}
+        <div className="nx-top-actions">
+          {isEditing ? (
+            <>
+              <button onClick={handleSaveProfile} className="nx-save-button">Save</button>
+              <button onClick={handleEditToggle} className="nx-cancel-button">Cancel</button>
+            </>
+          ) : (
+            <>
+              <button onClick={handleEditToggle} className="nx-edit-button" aria-label="Edit Profile">
+                <MdEdit />
+              </button>
+              <button onClick={handleLogout} className="nx-logout-button" aria-label="Logout">
+                <MdLogout />
+              </button>
+            </>
+          )}
+        </div>
+
         <div className="nx-user-details">
           {isEditing ? (
             <input
@@ -146,22 +180,6 @@ const ProfilePage = () => {
             <h1 className="nx-user-title">Hello, {user.name}</h1>
           )}
           <p className="nx-user-email">{user.email}</p>
-
-          <div className="nx-action-controls">
-            {isEditing ? (
-              <>
-                <button onClick={handleSaveProfile} className="nx-save-button">Save</button>
-                <button onClick={handleEditToggle} className="nx-cancel-button">Cancel</button>
-              </>
-            ) : (
-              <>
-                <button onClick={handleEditToggle} className="nx-edit-button" aria-label="Edit Profile">
-                  <MdEdit />
-                </button>
-                <button onClick={logout} className="nx-logout-button">Log Out</button>
-              </>
-            )}
-          </div>
         </div>
       </section>
 

@@ -43,7 +43,7 @@ const Navbar = () => {
   return (
     <>
       {/* Desktop Thin Sidebar */}
-      <nav className={`navbar-sidebar ${scrolled || !isHome ? 'scrolled' : ''} ${isMenuOpen ? 'expanded' : ''}`}>
+      <nav className={`navbar-sidebar ${scrolled ? 'scrolled' : ''} ${isMenuOpen ? 'expanded' : ''}`}>
         <div className="sidebar-header">
           <NavLink to="/" className="sidebar-logo" onClick={closeMenu}>
             食研
@@ -96,7 +96,7 @@ const Navbar = () => {
       </nav>
 
       {/* Mobile Top Navigation */}
-      <nav className={`navbar-mobile ${scrolled || !isHome ? 'scrolled' : ''}`}>
+      <nav className={`navbar-mobile ${scrolled ? 'scrolled' : ''}`}>
         <div className="mobile-nav-content">
           <NavLink to="/" className="mobile-logo" onClick={closeMenu}>
             食研

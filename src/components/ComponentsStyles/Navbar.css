@@ -3,18 +3,49 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-layout.background-page {
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 .main-content-wrapper {
   flex: 1;
-  margin-left: 60px; /* Even smaller sidebar */
+  margin-left: 60px; /* Account for sidebar width */
   transition: margin-left 0.3s ease;
+  width: calc(100% - 60px); /* Ensure proper width calculation */
+  position: relative;
 }
 
 /* Mobile layout adjustments - changed to 489px */
 @media (max-width: 489px) {
   .main-content-wrapper {
     margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Special handling for pages with background images */
+.main-content-wrapper.background-page {
+  margin: 0;
+  width: 100vw;
+  max-width: none;
+  overflow-x: hidden;
+  padding: 0;
+}
+
+@media (max-width: 489px) {
+  .main-content-wrapper.background-page {
+    margin: 0;
+    width: 100vw;
+    max-width: none;
+    padding: 0;
   }
 }
 
@@ -230,16 +261,133 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  z-index: 1000;
+  z-index: 1001;
   box-shadow: var(--shadow-light);
   transition: var(--transition);
-  color: var(--color-white); /* White text by default */
+  color: var(--color-primary); /* Black text by default */
+}
+
+/* Force white navbar for Homepage and Flore page at top */
+@media (max-width: 489px) {
+  .app-layout.background-page .navbar-mobile {
+    color: var(--color-white) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile .mobile-logo {
+    color: var(--color-white) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile .mobile-menu-btn {
+    color: var(--color-white) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile .mobile-logo:hover {
+    color: var(--color-white) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile .mobile-menu-btn:hover {
+    color: var(--color-white) !important;
+  }
+  
+  /* Ensure SVG elements are also white for Homepage and Flore */
+  .app-layout.background-page .navbar-mobile svg {
+    color: var(--color-white) !important;
+    fill: var(--color-white) !important;
+    stroke: var(--color-white) !important;
+  }
+}
+
+/* Force white navbar ONLY for Homepage and Flore page at top */
+@media (max-width: 489px) {
+  /* Homepage and Flore - white at top */
+  .app-layout.background-page .navbar-mobile {
+    color: var(--color-white) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile .mobile-logo {
+    color: var(--color-white) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile .mobile-menu-btn {
+    color: var(--color-white) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile .mobile-logo:hover {
+    color: var(--color-white) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile .mobile-menu-btn:hover {
+    color: var(--color-white) !important;
+  }
+  
+  /* Ensure SVG elements are also white for Homepage and Flore */
+  .app-layout.background-page .navbar-mobile svg {
+    color: var(--color-white) !important;
+    fill: var(--color-white) !important;
+    stroke: var(--color-white) !important;
+  }
+  
+  /* When scrolled, Homepage and Flore should be black */
+  .app-layout.background-page .navbar-mobile.scrolled {
+    color: var(--color-primary) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile.scrolled .mobile-logo {
+    color: var(--color-primary) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile.scrolled .mobile-menu-btn {
+    color: var(--color-primary) !important;
+  }
+  
+  .app-layout.background-page .navbar-mobile.scrolled svg {
+    color: var(--color-primary) !important;
+    fill: var(--color-primary) !important;
+    stroke: var(--color-primary) !important;
+  }
+  
+  /* Mobile menu icons should be lighter and not filled */
+  .mobile-menu svg {
+    color: var(--color-secondary) !important;
+    fill: none !important;
+    stroke: var(--color-secondary) !important;
+    stroke-width: 1.5 !important;
+  }
+  
+  .mobile-menu-item:hover svg {
+    color: var(--color-primary) !important;
+    stroke: var(--color-primary) !important;
+  }
+  
+  /* Override any navbar styling for mobile menu icons */
+  .navbar-mobile .mobile-menu svg,
+  .app-layout.background-page .navbar-mobile .mobile-menu svg,
+  .app-layout.background-page .navbar-mobile.scrolled .mobile-menu svg {
+    color: var(--color-secondary) !important;
+    fill: none !important;
+    stroke: var(--color-secondary) !important;
+    stroke-width: 1.5 !important;
+  }
+  
+  .navbar-mobile .mobile-menu-item:hover svg,
+  .app-layout.background-page .navbar-mobile .mobile-menu-item:hover svg,
+  .app-layout.background-page .navbar-mobile.scrolled .mobile-menu-item:hover svg {
+    color: var(--color-primary) !important;
+    stroke: var(--color-primary) !important;
+  }
 }
 
 .navbar-mobile.scrolled {
   background: var(--color-background-dark);
   color: var(--color-primary); /* Dark text when scrolled */
   border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-mobile.force-white {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 1001;
 }
 
 .mobile-nav-content {
@@ -536,4 +684,64 @@
 
 .mobile-menu::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.3);
+}
+
+/* Force white text on pages with background images */
+.navbar-sidebar.force-white {
+  color: var(--color-white) !important;
+}
+
+.navbar-sidebar.force-white .sidebar-logo {
+  color: var(--color-white) !important;
+}
+
+.navbar-sidebar.force-white .sidebar-nav-item {
+  color: var(--color-white) !important;
+}
+
+.navbar-sidebar.force-white .menu-item {
+  color: var(--color-white) !important;
+}
+
+.navbar-sidebar.force-white .sidebar-nav-item:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: var(--color-white) !important;
+}
+
+.navbar-sidebar.force-white .menu-item:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: var(--color-white) !important;
+}
+
+.navbar-sidebar.force-white .sidebar-nav-item.active {
+  background: var(--color-white) !important;
+  color: var(--color-primary) !important;
+  border: 1px solid var(--color-white) !important;
+}
+
+.navbar-sidebar.force-white .sidebar-nav-item.active:hover {
+  background: var(--color-white) !important;
+  color: var(--color-primary) !important;
+}
+
+/* Mobile navbar force-white styles */
+.navbar-mobile.force-white {
+  color: var(--color-white) !important;
+}
+
+.navbar-mobile.force-white .mobile-logo {
+  color: var(--color-white) !important;
+}
+
+.navbar-mobile.force-white .mobile-menu-btn {
+  color: var(--color-white) !important;
+}
+
+.navbar-mobile.force-white .mobile-logo:hover {
+  color: var(--color-white) !important;
+}
+
+.navbar-mobile.force-white .mobile-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: var(--color-white) !important;
 }

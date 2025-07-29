@@ -55,13 +55,36 @@ body {
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 var(--spacing-lg); /* Restore normal padding */
+  padding: 0 var(--spacing-lg);
+  /* Ensure container is properly positioned */
+  position: relative;
+  width: 100%;
+  /* Account for sidebar on desktop */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Desktop container adjustments */
+@media (min-width: 490px) {
+  .container {
+    /* Ensure container doesn't overlap with sidebar */
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: calc(1400px - 60px); /* Account for sidebar width */
+    /* Add extra left padding to account for sidebar */
+    padding-left: calc(var(--spacing-lg) + 20px);
+    padding-right: var(--spacing-lg);
+  }
 }
 
 /* Mobile layout - when navbar is hidden */
 @media (max-width: 489px) {
   .container {
-    padding: 0 var(--spacing-lg); /* Normal padding on mobile */
+    padding: 0 var(--spacing-lg);
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1400px; /* Full width on mobile */
   }
 }
 
@@ -71,7 +94,13 @@ body {
   /* Subtle background gradient that changes on scroll */
   background: linear-gradient(180deg, var(--color-off-white) 0%, var(--color-bg-light) 100%);
   transition: background 0.8s ease;
-  margin-top: 0; /* Ensure no overlap with navbar */
+  margin-top: 0;
+  /* Ensure homepage takes full width */
+  width: 100%;
+  position: relative;
+  /* Prevent horizontal overflow */
+  overflow-x: hidden;
+  display: block;
 }
 
 /* Hero Section */
@@ -359,6 +388,12 @@ body {
 .main-content {
   background: var(--color-off-white);
   position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  /* Ensure proper positioning */
+  display: block;
+  overflow-x: hidden;
 }
 
 /* Showcase Section - Enhanced for mobile */
@@ -368,6 +403,17 @@ body {
   margin-top: 0;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  display: block;
+}
+
+/* Desktop showcase adjustments */
+@media (min-width: 490px) {
+  .showcase .container {
+    /* Add extra left padding to account for sidebar */
+    padding-left: calc(var(--spacing-lg) + 20px);
+    padding-right: var(--spacing-lg);
+  }
 }
 
 /* Subtle background pattern */
@@ -539,17 +585,27 @@ body {
 .section {
   padding: var(--spacing-xl) 0; /* Reduced padding */
   position: relative;
+  width: 100%;
+  margin: 0;
+  /* Ensure proper alignment */
+  display: block;
 }
 
 /* Remove old conflicting rules and ensure both sections are identical */
 .section.experiments {
   background: var(--color-off-white);
   padding: var(--spacing-2xl) 0 var(--spacing-lg) 0; /* More top padding */
+  width: 100%;
+  margin: 0;
+  display: block;
 }
 
 .section.recipes {
   background: var(--color-off-white);
   padding: var(--spacing-2xl) 0 var(--spacing-lg) 0; /* More top padding */
+  width: 100%;
+  margin: 0;
+  display: block;
 }
 
 /* Flore Section - Enhanced with reduced spacing */
@@ -557,6 +613,18 @@ body {
   background: var(--color-off-white);
   padding: var(--spacing-lg) 0; /* Reduced padding */
   position: relative;
+  width: 100%;
+  margin: 0;
+  display: block;
+}
+
+/* Desktop flore section adjustments */
+@media (min-width: 490px) {
+  .section.flore .container {
+    /* Add extra left padding to account for sidebar */
+    padding-left: calc(var(--spacing-lg) + 20px);
+    padding-right: var(--spacing-lg);
+  }
 }
 
 /* Subtle background effect for flore section */
@@ -724,11 +792,32 @@ body {
   margin-right: 0;
   padding-left: 0;
   padding-right: 0;
+  width: 100%;
+}
+
+/* Desktop slider container adjustments */
+@media (min-width: 490px) {
+  .section.experiments .slider-container,
+  .section.recipes .slider-container {
+    /* Add extra left padding to account for sidebar */
+    padding-left: 20px;
+    padding-right: 0;
+  }
 }
 
 /* Journal section header needs more left spacing */
 .section.experiments .section-header-content {
   padding-left: 0;
+  width: 100%;
+}
+
+/* Desktop section header adjustments */
+@media (min-width: 490px) {
+  .section.experiments .section-header-content,
+  .section.recipes .section-header-content {
+    /* Add extra left padding to account for sidebar */
+    padding-left: 20px;
+  }
 }
 
 /* Recipes slider stays the same */
@@ -739,6 +828,7 @@ body {
   margin-right: 0;
   padding-left: 0;
   padding-right: 0;
+  width: 100%;
 }
 
 /* Mobile overrides for slider containers */
@@ -750,10 +840,45 @@ body {
     padding-left: 0;
     padding-right: 0;
     overflow: visible;
+    width: 100%;
   }
   
   .section.experiments .section-header-content {
     padding-left: 0;
+    width: 100%;
+  }
+  
+  /* Mobile-optimized slider - Fixed positioning */
+  .slider-container {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+    overflow: visible;
+    width: 100%;
+  }
+  
+  .slider {
+    padding-left: 0;
+    padding-right: 0;
+    gap: var(--spacing-sm);
+    scroll-snap-type: x mandatory;
+    margin: 0 -0.5rem;
+    width: 100%;
+  }
+  
+  /* Mobile slider section adjustments */
+  .slider-section {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    width: 100%;
+  }
+  
+  .section-header-content {
+    max-width: 100%;
+    min-height: auto;
+    padding-bottom: var(--spacing-md);
+    width: 100%;
   }
 }
 
@@ -765,10 +890,44 @@ body {
     padding-left: 0;
     padding-right: 0;
     overflow: visible;
+    width: 100%;
   }
   
   .section.experiments .section-header-content {
     padding-left: 0;
+    width: 100%;
+  }
+  
+  /* Compact mobile slider - Fixed positioning */
+  .slider-container {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+    overflow: visible;
+    width: 100%;
+  }
+  
+  .slider {
+    padding-left: 0;
+    padding-right: 0;
+    gap: var(--spacing-xs);
+    margin: 0 -0.25rem;
+    width: 100%;
+  }
+  
+  /* Ultra-mobile slider section adjustments */
+  .slider-section {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+    width: 100%;
+  }
+  
+  .section-header-content {
+    max-width: 100%;
+    min-height: auto;
+    padding-bottom: var(--spacing-sm);
+    width: 100%;
   }
 }
 
@@ -783,6 +942,7 @@ body {
   -ms-overflow-style: none;
   padding-left: 0; /* Remove extra padding */
   padding-right: 0; /* Remove extra padding */
+  width: 100%;
 }
 
 /* Mobile overrides for slider padding */
@@ -793,6 +953,7 @@ body {
     padding-right: 0;
     gap: var(--spacing-sm);
     margin: 0 -0.5rem;
+    width: 100%;
   }
 }
 
@@ -803,6 +964,7 @@ body {
     padding-right: 0;
     gap: var(--spacing-xs);
     margin: 0 -0.25rem;
+    width: 100%;
   }
 }
 
@@ -875,6 +1037,7 @@ body {
   align-items: flex-start;
   margin-bottom: var(--spacing-2xl);
   gap: var(--spacing-xl);
+  width: 100%;
 }
 
 .section-header-content {
@@ -884,6 +1047,7 @@ body {
   flex-direction: column;
   justify-content: center;
   min-height: 400px;
+  width: 100%;
 }
 
 .section-header h2 {
@@ -955,12 +1119,15 @@ body {
   transform: translateX(4px);
 }
 
+/* Slider section layout */
 .slider-section {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: var(--spacing-2xl);
   align-items: start;
   position: relative;
+  width: 100%;
+  margin: 0;
 }
 
 .slider-container {
@@ -1018,6 +1185,7 @@ body {
   -ms-overflow-style: none;
   padding-left: 100px;
   padding-right: 100px;
+  width: 100%;
 }
 
 .slider::-webkit-scrollbar {
@@ -1524,6 +1692,7 @@ body {
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
     overflow: visible;
+    width: 100%;
   }
   
   .slider {
@@ -1532,6 +1701,7 @@ body {
     gap: var(--spacing-sm);
     scroll-snap-type: x mandatory;
     margin: 0 -0.5rem;
+    width: 100%;
   }
   
   .media-card {
@@ -1746,6 +1916,7 @@ body {
     padding-left: var(--spacing-sm);
     padding-right: var(--spacing-sm);
     overflow: visible;
+    width: 100%;
   }
   
   .slider {
@@ -1753,6 +1924,7 @@ body {
     padding-right: 0;
     gap: var(--spacing-xs);
     margin: 0 -0.25rem;
+    width: 100%;
   }
   
   .media-card {
@@ -1984,6 +2156,7 @@ html {
   user-select: none;
   /* Optimize for performance */
   will-change: scroll-position;
+  width: 100%;
 }
 
 .slider::-webkit-scrollbar {
@@ -2328,7 +2501,7 @@ html {
   transition-delay: 0.4s;
 }
 
-/* Flore Section - Enhanced with faster transitions */
+/* Flore Section - Enhanced with cleaner transitions */
 .flore-section {
   display: grid;
   grid-template-columns: 1fr 1.4fr;
@@ -2339,24 +2512,24 @@ html {
   z-index: 2;
   opacity: 1;
   transform: none;
-  transition: none;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 .section.flore.in-view .flore-section {
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
 }
 
 .flore-content {
   padding-right: var(--spacing-xl);
   opacity: 1;
   transform: none;
-  transition: none;
+  transition: opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s;
 }
 
 .section.flore.in-view .flore-content {
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
 }
 
 .flore-image-container {
@@ -2366,12 +2539,12 @@ html {
   border-radius: 4px;
   opacity: 1;
   transform: none;
-  transition: none;
+  transition: opacity 0.8s ease-out 0.4s, transform 0.8s ease-out 0.4s;
 }
 
 .section.flore.in-view .flore-image-container {
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
 }
 
 /* Slider animations - REMOVED to reduce visual overload */

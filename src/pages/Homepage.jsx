@@ -94,7 +94,7 @@ const Homepage = () => {
           </h1>
           </div>
 
-        {/* Sleek Parallax Scroll Indicator */}
+        {/*Parallax Scroll Indicator */}
         <div className="hero-scroll-indicator">
           <span className="scroll-text">Scroll</span>
           <div className="scroll-line"></div>
