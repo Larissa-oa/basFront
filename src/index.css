@@ -43,14 +43,19 @@ body {
   font-family: var(--font-primary);
   font-weight: var(--font-weight-normal);
   line-height: 1.6;
-  color: var(--color-dark);
-  background: var(--color-white);
+  color: #4a3420;
+  background: linear-gradient(45deg, #f8f6f0 0%, #f0ede5 25%, #e8e4d8 50%, #f0ede5 75%, #f8f6f0 100%);
+  /* Static background - no animation site-wide */
+  background-size: cover;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Background gradient animation removed globally */
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: var(--font-weight-medium);
   line-height: 1.2;
+  color: #3d2914;
 } 

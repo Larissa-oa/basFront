@@ -37,10 +37,19 @@ html, body {
   font-family: var(--font-primary);
   font-size: 16px;
   line-height: 1.6;
-  color: var(--color-primary);
-  background-color: var(--color-white);
+  color: #4a3420;
+  background: linear-gradient(45deg, #f8f6f0 0%, #f0ede5 25%, #e8e4d8 50%, #f0ede5 75%, #f8f6f0 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Background gradient animation */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 * {
@@ -50,12 +59,36 @@ html, body {
 /* Main Container */
 .flore-page {
   width: 100vw;
-  background-color: var(--color-white);
+  background: linear-gradient(45deg, #f8f6f0 0%, #f0ede5 25%, #e8e4d8 50%, #f0ede5 75%, #f8f6f0 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+  color: #4a3420;
   margin: 0;
   padding: 0;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
   overflow-x: hidden;
   position: relative;
   min-height: 100vh;
+}
+
+/* Path Line - Scroll indicator */
+.flore-path-line {
+  position: fixed;
+  right: 80px;
+  top: 0;
+  width: 3px;
+  height: 0%;
+  background: linear-gradient(180deg, 
+    rgba(139, 69, 19, 1) 0%, 
+    rgba(160, 82, 45, 0.8) 25%,
+    rgba(139, 69, 19, 0.6) 50%,
+    rgba(160, 82, 45, 0.8) 75%,
+    rgba(139, 69, 19, 1) 100%
+  );
+  z-index: 100;
+  transition: height 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 0 10px rgba(139, 69, 19, 0.3);
 }
 
 /* Hero Section */
@@ -64,11 +97,11 @@ html, body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
-  min-height: 600px;
-  max-height: 900px;
-  margin: 0;
-  padding: 0;
+  height: 70vh;
+  min-height: 500px;
+  max-height: 700px;
+  margin: 0 !important;
+  padding: 0 !important;
   z-index: 1;
 }
 
@@ -82,8 +115,13 @@ html, body {
 }
 
 .hero-image img {
-  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  min-width: 100vw;
   height: 100%;
+  transform: translateX(-50%);
   object-fit: cover;
   transition: transform 0.8s ease;
   margin: 0;
@@ -202,7 +240,7 @@ html, body {
 
 .primary-button {
   background-color: var(--color-white);
-  color: var(--color-primary);
+  color: #3d2914;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -252,7 +290,7 @@ html, body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-accent);
+  color: #8b4513;
   margin-bottom: var(--spacing-sm);
   font-family: var(--font-primary);
 }
@@ -264,31 +302,17 @@ html, body {
   line-height: 1.2;
   margin: 0;
   letter-spacing: -0.02em;
-  color: var(--color-primary);
+  color: #3d2914;
 }
 
 /* Add spacing after hero for sections */
 .philosophy-section {
-  background-color: var(--color-light);
+  background: transparent;
   position: relative;
-  margin-top: 100vh;
+  margin-top: calc(100vh - 180px);
   z-index: 2;
 }
 
-.philosophy-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--color-border) 50%,
-    transparent 100%
-  );
-}
 
 .philosophy-content {
   max-width: 800px;
@@ -300,7 +324,7 @@ html, body {
   font-size: 1.1rem;
   line-height: 1.7;
   font-weight: 400;
-  color: var(--color-primary);
+  color: #4a3420;
   margin: 0 0 var(--spacing-md) 0;
   quotes: none;
   font-style: italic;
@@ -311,15 +335,17 @@ html, body {
   display: block;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--color-secondary);
+  color: #6b4423;
   font-style: normal;
   letter-spacing: 0.025em;
 }
 
 /* Dining Section */
 .dining-section {
-  background-color: var(--color-white);
-  padding: var(--spacing-3xl) 0;
+  background: transparent;
+  padding: var(--spacing-xl) 0 0 0;
+  margin-bottom: 0;
+  margin-top: calc(-1 * var(--spacing-lg));
 }
 
 .dining-grid {
@@ -365,7 +391,7 @@ html, body {
 .card-meta span {
   padding: 0.25rem 0.75rem;
   background-color: rgba(255, 255, 255, 0.9);
-  color: var(--color-secondary);
+  color: #6b4423;
   font-size: 0.7rem;
   font-weight: 500;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -377,9 +403,9 @@ html, body {
 }
 
 .card-meta span:hover {
-  background-color: var(--color-primary);
+  background-color: #3d2914;
   color: var(--color-white);
-  border-color: var(--color-primary);
+  border-color: #3d2914;
 }
 
 .card-content {
@@ -387,6 +413,7 @@ html, body {
   flex-direction: column;
   gap: var(--spacing-md);
   padding: 0;
+  margin-top: var(--spacing-md);
 }
 
 .card-content h3 {
@@ -394,7 +421,7 @@ html, body {
   font-size: 1.75rem;
   font-weight: 600;
   margin: 0;
-  color: var(--color-primary);
+  color: #3d2914;
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
@@ -402,7 +429,7 @@ html, body {
 .card-content p {
   font-family: var(--font-primary);
   font-size: 0.95rem;
-  color: var(--color-secondary);
+  color: #6b4423;
   line-height: 1.6;
   margin: 0;
   font-weight: 400;
@@ -411,7 +438,7 @@ html, body {
 .card-content .dining-description {
   font-family: var(--font-primary);
   font-size: 0.75rem;
-  color: var(--color-accent);
+  color: #8b4513;
   line-height: 1.5;
   margin: 0;
   text-transform: uppercase;
@@ -421,15 +448,20 @@ html, body {
 
 /* Recognition Section */
 .recognition-section {
-  background-color: var(--color-light);
+  background: transparent;
   padding: var(--spacing-2xl) 0;
 }
 
 .accolades-container {
-  margin-top: var(--spacing-xl);
+  margin: 0 !important;
+  margin-top: var(--spacing-3xl) !important;
+  margin-bottom: 0 !important;
+  margin-left: calc(-50vw + 50%) !important;
+  margin-right: calc(-50vw + 50%) !important;
+  width: 100vw !important;
   overflow: hidden;
   padding: var(--spacing-lg) 0;
-  border-radius: 12px;
+  border-radius: 0;
   position: relative;
 }
 
@@ -455,23 +487,20 @@ html, body {
 .accolades-slide {
   display: flex;
   align-items: center;
-  gap: 80px;
-  animation: scroll-left 20s linear infinite;
+  gap: 40px;
   padding: 0 40px;
+  transition: transform 0.1s ease-out;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-.accolades-slide:hover {
-  animation-play-state: paused;
+.accolades-slide:active {
+  cursor: grabbing;
 }
 
-@keyframes scroll-left {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
 
 .accolade-link {
   display: flex;
@@ -509,6 +538,19 @@ html, body {
 }
 /* Responsive Design */
 @media (max-width: 768px) {
+  .hero-container {
+    height: 70vh;
+    min-height: 400px;
+  }
+  
+  .philosophy-section {
+    margin-top: calc(100vh - 200px - 60px);
+  }
+  
+  .flore-path-line {
+    right: 30px;
+  }
+  
   .hero-text {
     bottom: var(--spacing-lg);
     left: var(--spacing-md);
@@ -560,6 +602,19 @@ html, body {
 }
 
 @media (max-width: 480px) {
+  .hero-container {
+    height: 70vh;
+    min-height: 350px;
+  }
+  
+  .philosophy-section {
+    margin-top: calc(100vh - 220px - 60px);
+  }
+  
+  .flore-path-line {
+    right: 15px;
+  }
+  
   .hero-text {
     bottom: var(--spacing-md);
     left: var(--spacing-sm);

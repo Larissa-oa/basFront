@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 
 import "./PageStyles/FlorePage.css";
@@ -23,29 +23,128 @@ const accolades = [
 ];
 
 const FlorePage = () => {
+  const [scrollDirection, setScrollDirection] = useState(0)
+  const lastScrollY = useRef(0)
+  const accoladesSlide = useRef(null)
+  const isDragging = useRef(false)
+  const startX = useRef(0)
+  const scrollLeft = useRef(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      const windowHeight = window.innerHeight
+
+      // Determine scroll direction
+      const direction = scrollY > lastScrollY.current ? 1 : -1
+      setScrollDirection(direction)
+      lastScrollY.current = scrollY
+
+      // Smooth path line animation
+      const pathLine = document.querySelector('.flore-path-line')
+      if (pathLine) {
+        const pathProgress = Math.min(scrollY / (document.documentElement.scrollHeight - windowHeight), 1)
+        // Smoother easing function for more fluid movement
+        const smoothProgress = pathProgress < 0.5 
+          ? 2 * pathProgress * pathProgress 
+          : 1 - Math.pow(-2 * pathProgress + 2, 3) / 2
+        pathLine.style.height = `${smoothProgress * 100}%`
+      }
+
+      // Control accolades slider based on scroll direction
+      if (accoladesSlide.current && !isDragging.current) {
+        const currentTransform = accoladesSlide.current.style.transform || 'translateX(0px)'
+        const currentX = parseFloat(currentTransform.match(/-?\d+\.?\d*/)?.[0] || 0)
+        const newX = currentX + (direction * 5) // Increased from 2px to 5px for faster movement
+        
+        accoladesSlide.current.style.transform = `translateX(${newX}px)`
+      }
+    }
+
+    const throttledScroll = () => {
+      requestAnimationFrame(handleScroll)
+    }
+
+    window.addEventListener('scroll', throttledScroll, { passive: true })
+    handleScroll()
+
+    return () => {
+      window.removeEventListener('scroll', throttledScroll)
+    }
+  }, [])
+
+  // Drag/Swipe functionality
+  useEffect(() => {
+    const slider = accoladesSlide.current
+    if (!slider) return
+
+    const handleMouseDown = (e) => {
+      isDragging.current = true
+      slider.style.cursor = 'grabbing'
+      startX.current = e.pageX || e.touches?.[0]?.pageX
+      const currentTransform = slider.style.transform || 'translateX(0px)'
+      scrollLeft.current = parseFloat(currentTransform.match(/-?\d+\.?\d*/)?.[0] || 0)
+    }
+
+    const handleMouseMove = (e) => {
+      if (!isDragging.current) return
+      e.preventDefault()
+      const x = e.pageX || e.touches?.[0]?.pageX
+      const walk = (x - startX.current) * 1.5 // Multiply for faster drag
+      slider.style.transform = `translateX(${scrollLeft.current + walk}px)`
+    }
+
+    const handleMouseUp = () => {
+      isDragging.current = false
+      slider.style.cursor = 'grab'
+    }
+
+    // Mouse events
+    slider.addEventListener('mousedown', handleMouseDown)
+    slider.addEventListener('mousemove', handleMouseMove)
+    slider.addEventListener('mouseup', handleMouseUp)
+    slider.addEventListener('mouseleave', handleMouseUp)
+
+    // Touch events
+    slider.addEventListener('touchstart', handleMouseDown, { passive: false })
+    slider.addEventListener('touchmove', handleMouseMove, { passive: false })
+    slider.addEventListener('touchend', handleMouseUp)
+
+    return () => {
+      slider.removeEventListener('mousedown', handleMouseDown)
+      slider.removeEventListener('mousemove', handleMouseMove)
+      slider.removeEventListener('mouseup', handleMouseUp)
+      slider.removeEventListener('mouseleave', handleMouseUp)
+      slider.removeEventListener('touchstart', handleMouseDown)
+      slider.removeEventListener('touchmove', handleMouseMove)
+      slider.removeEventListener('touchend', handleMouseUp)
+    }
+  }, [])
+
   return (
     <section className="flore-page">
+      {/* Path Line */}
+      <div className="flore-path-line"></div>
       {/* Hero Section */}
       <div className="hero-container">
         <div className="hero-image">
           <img src={imgFlore} alt="Flore dining room" />
           <div className="hero-overlay"></div>
           <div className="hero-text">
-            <div className="hero-badge">Amsterdam</div>
             <h1>Restaurant Flore</h1>
             <p>
               Conscious fine dining inspired by Nordic minimalism and Japanese subtlety — celebrating the pure essence of responsibly sourced Dutch ingredients.
             </p>
             <div className="hero-actions">
               <button className="primary-button">
-                <Link to="https://www.sevenrooms.com/explore/restaurantflore/reservations/create/search?lang=en&tracking=flore-website">
+                <a href="https://www.sevenrooms.com/explore/restaurantflore/reservations/create/search?lang=en&tracking=flore-website" target="_blank" rel="noopener noreferrer">
                   Reserve Table
-                </Link>
+                </a>
               </button>
               <button className="secondary-button">
-                <Link to="https://restaurantflore.com">
+                <a href="https://restaurantflore.com/#menus" target="_blank" rel="noopener noreferrer">
                   Explore Menu
-                </Link>
+                </a>
               </button>
             </div>
           </div>
@@ -113,7 +212,7 @@ const FlorePage = () => {
             backgroundPosition: "center"
           }}>
             <div className="accolades-track">
-              <div className="accolades-slide">
+              <div className="accolades-slide" ref={accoladesSlide}>
                 {accolades.map((accolade, index) => (
                   <a 
                     key={index} 

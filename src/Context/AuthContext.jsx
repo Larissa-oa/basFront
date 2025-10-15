@@ -39,8 +39,13 @@ export const AuthProvider = ({ children }) => {
       });
       setUser(userRes.data);
     } catch (err) {
-      console.error("Login error:", err.response?.data || err.message);
-      throw new Error(err.response?.data?.message || "Login failed");
+      console.error("Login error details:", {
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+        message: err.message
+      });
+      throw new Error(err.response?.data?.message || err.response?.data?.error || "Invalid email or password");
     }
   };
 

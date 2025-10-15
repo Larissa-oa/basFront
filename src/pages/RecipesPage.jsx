@@ -4,31 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaTrash, FaPen, FaPlus, FaHeart, FaSearch, FaTimes } from 'react-icons/fa';
 import { scrollToTop } from '../utils/scrollToTop';
-import Modal from 'react-modal';
+import CreateRecipeModal from '../components/CreateRecipeModal';
 import API_BASE_URL from '../config/api.js';
-import { uploadToCloudinary } from '../config/cloudinary.js';
 import './PageStyles/RecipesPage.css';
-
-Modal.setAppElement('#root');
 
 const RecipePage = () => {
   const { user, loading } = useContext(AuthContext);
   const [recipes, setRecipes] = useState([]);
   const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
   const [error, setError] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  // Form state
-  const [title, setTitle] = useState('');
-  const [ingredients, setIngredients] = useState(['']);
-  const [instructions, setInstructions] = useState('');
-  const [prepTime, setPrepTime] = useState('');
-  const [cookTime, setCookTime] = useState('');
-  const [servings, setServings] = useState('');
-  const [headerImage, setHeaderImage] = useState(null);
-  const [processImages, setProcessImages] = useState([]);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [processImagePreviews, setProcessImagePreviews] = useState([]);
 
   const [likedRecipes, setLikedRecipes] = useState(new Set());
   const [editingRecipe, setEditingRecipe] = useState(null);
@@ -99,213 +85,32 @@ const RecipePage = () => {
     recipe.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Handle header image change
-  const handleHeaderImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setHeaderImage(file);
-      const reader = new FileReader();
-      reader.onload = (e) => setImagePreview(e.target.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Handle process images change
-  const handleProcessImagesChange = (e) => {
-    const newFiles = Array.from(e.target.files);
-    const currentImages = processImages || [];
+  // Sort recipes based on selected option
+  const sortedRecipes = [...filteredRecipes].sort((a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
     
-    // Check if adding these files would exceed the limit
-    if (currentImages.length + newFiles.length > 5) {
-      alert(`You can only add up to 5 process images. You currently have ${currentImages.length} images.`);
-      return;
+    switch (sortBy) {
+      case 'newest':
+        return dateB - dateA; // Newest first
+      case 'oldest':
+        return dateA - dateB; // Oldest first
+      default:
+        return dateB - dateA; // Default to newest
     }
+  });
 
-    // Add new files to existing images array
-    const updatedImages = [...currentImages, ...newFiles];
-    setProcessImages(updatedImages);
-
-    // Create previews for new images
-    const newPreviews = [...processImagePreviews];
-    
-    newFiles.forEach((file, index) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        newPreviews[currentImages.length + index] = e.target.result;
-        setProcessImagePreviews([...newPreviews]);
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // Clear the file input so the same files can be selected again if needed
-    e.target.value = '';
-  };
-
-  // Remove process image
-  const removeProcessImage = (index) => {
-    const newImages = processImages.filter((_, i) => i !== index);
-    const newPreviews = processImagePreviews.filter((_, i) => i !== index);
-    setProcessImages(newImages);
-    setProcessImagePreviews(newPreviews);
-  };
-
-  // Remove header image
-  const removeHeaderImage = () => {
-    setHeaderImage(null);
-    setImagePreview(null);
-  };
-
-  const addIngredient = () => {
-    setIngredients(prev => [...prev, '']);
-  };
-
-  const removeIngredient = (index) => {
-    setIngredients(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const handleIngredientChange = (index, value) => {
-    const newIngredients = [...ingredients];
-    newIngredients[index] = value;
-    setIngredients(newIngredients);
-  };
-
-  // Open modal for creating new recipe
+  // Modal handlers
   const openCreateModal = () => {
-    setEditingRecipe(null);
-    resetForm();
     setModalIsOpen(true);
   };
 
-  // Open modal for editing existing recipe
-  const openEditModal = (recipe) => {
-    setEditingRecipe(recipe);
-    setTitle(recipe.title || '');
-    setIngredients(recipe.ingredients || ['']);
-    setInstructions(recipe.instructions || '');
-    setPrepTime(recipe.prepTime || '');
-    setCookTime(recipe.cookTime || '');
-    setServings(recipe.servings || '');
-    
-    // Reset images (user can upload new ones)
-    setHeaderImage(null);
-    setProcessImages([]);
-    setImagePreview(null);
-    setProcessImagePreviews([]);
-    
-    setModalIsOpen(true);
+  const closeModal = () => {
+    setModalIsOpen(false);
   };
 
-  // Reset form fields
-  const resetForm = () => {
-    setTitle('');
-    setIngredients(['']);
-    setInstructions('');
-    setPrepTime('');
-    setCookTime('');
-    setServings('');
-    setHeaderImage(null);
-    setProcessImages([]);
-    setImagePreview(null);
-    setProcessImagePreviews([]);
-  };
-
-  // Submit handler supports both create and update
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!title.trim()) {
-      alert('Title is required');
-      return;
-    }
-
-    const validIngredients = ingredients.filter(ing => ing.trim());
-    if (validIngredients.length === 0) {
-      alert('At least one ingredient is required.');
-      return;
-    }
-
-    if (!instructions.trim()) {
-      alert('Instructions are required.');
-      return;
-    }
-
-    try {
-      const token = localStorage.getItem('token');
-      
-      // Upload images to Cloudinary first
-      let headerImageUrl = null;
-      let processImageUrls = [];
-
-      if (headerImage) {
-        try {
-          headerImageUrl = await uploadToCloudinary(headerImage);
-        } catch (error) {
-          console.error('Error uploading header image:', error);
-          alert('Failed to upload header image. Please try again.');
-          return;
-        }
-      }
-
-      if (processImages.length > 0) {
-        try {
-          const uploadPromises = processImages.map(image => uploadToCloudinary(image));
-          processImageUrls = await Promise.all(uploadPromises);
-        } catch (error) {
-          console.error('Error uploading process images:', error);
-          alert('Failed to upload process images. Please try again.');
-          return;
-        }
-      }
-
-      // Prepare the data to send to backend
-      const recipeData = {
-        title: title.trim(),
-        ingredients: validIngredients.map(ing => ing.trim()),
-        instructions: instructions.trim(),
-        headerImage: headerImageUrl,
-        processImages: processImageUrls
-      };
-
-      // Add optional fields only if they have values
-      if (prepTime && prepTime > 0) recipeData.prepTime = parseInt(prepTime);
-      if (cookTime && cookTime > 0) recipeData.cookTime = parseInt(cookTime);
-      if (servings && servings > 0) recipeData.servings = parseInt(servings);
-
-      if (editingRecipe) {
-        // Update existing recipe
-        const response = await axios.put(
-          `${API_BASE_URL}/recipes/${editingRecipe._id}`,
-          recipeData,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        // Update recipe in local state
-        setRecipes(prev =>
-          prev.map(r => (r._id === editingRecipe._id ? response.data : r))
-        );
-      } else {
-        // Create new recipe
-        const response = await axios.post(`${API_BASE_URL}/recipes`, recipeData, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setRecipes(prev => [response.data, ...prev]);
-      }
-
-      setModalIsOpen(false);
-      resetForm();
-      setEditingRecipe(null);
-    } catch (err) {
-      console.error('Error saving recipe:', err);
-      alert('Failed to save the recipe. Please try again.');
-    }
+  const handleRecipeCreated = (newRecipe) => {
+    setRecipes(prev => [newRecipe, ...prev]);
   };
 
   if (loading) return (
@@ -317,10 +122,11 @@ const RecipePage = () => {
 
   return (
     <div className="recipe-page">
+      <div className="main-content-wrapper">
       <div className="recipe-header">
         <div className="header-content">
-          <h1 className="recipe-title">Recipes</h1>
-          <p className="recipe-subtitle">Discover culinary inspiration</p>
+          <h1 className="recipe-title">Journals</h1>
+          <p className="recipe-subtitle">Here you will find our thoughts, experiments and stories behind Flore. Explorre all.</p>
         </div>
       </div>
 
@@ -335,12 +141,26 @@ const RecipePage = () => {
             onChange={e => setSearch(e.target.value)}
           />
         </div>
+        
+        <div className="sort-container">
+          <label htmlFor="sort-select" className="sort-label">Sort by:</label>
+          <select
+            id="sort-select"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="sort-select"
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
 
         {user?.isAdmin && (
           <button
             className="create-recipe-btn"
             onClick={openCreateModal}
             title="Create new recipe"
+            aria-label="Create new recipe"
           >
             <FaPlus />
           </button>
@@ -348,20 +168,18 @@ const RecipePage = () => {
       </div>
 
       {error && (
-        <div className="error-container">
-          <p className="error-text">{error}</p>
+        <div className="error-message">
+          <p>{error}</p>
         </div>
       )}
 
-      <div className="recipe-grid-container">
-        {filteredRecipes.length === 0 && (
+      {sortedRecipes.length === 0 ? (
           <div className="no-recipes">
             <p>No recipes found.</p>
           </div>
-        )}
-
+      ) : (
         <div className="recipe-grid">
-          {filteredRecipes.map(recipe => (
+          {sortedRecipes.map(recipe => (
             <article key={recipe._id} className="recipe-card">
               <div className="recipe-card-inner">
                 <div className="recipe-image-container">
@@ -376,39 +194,44 @@ const RecipePage = () => {
                       }}
                     />
                   ) : (
-                    <div 
-                      className="recipe-image-placeholder"
-                      onClick={() => {
-                        scrollToTop();
-                        navigate(`/recipes/${recipe._id}`);
-                      }}
-                    >
+                    <div className="recipe-image-placeholder">
                       <span>No Image</span>
                     </div>
                   )}
+                </div>
+                
+                <div className="recipe-content">
+                  <h3 className="recipe-card-title">{recipe.title}</h3>
+
+                  <div className="recipe-meta">
+                    {recipe.prepTime && <span>Prep: {recipe.prepTime}min</span>}
+                    {recipe.cookTime && <span>Cook: {recipe.cookTime}min</span>}
+                    {recipe.servings && <span>Serves: {recipe.servings}</span>}
+                  </div>
                   
-                  {user && (
+                  <div className="recipe-actions">
                     <button
-                      onClick={() => toggleLike(recipe._id)}
                       className={`like-btn ${likedRecipes.has(recipe._id) ? 'liked' : ''}`}
+                      onClick={() => toggleLike(recipe._id)}
                       title={likedRecipes.has(recipe._id) ? 'Remove from favorites' : 'Add to favorites'}
                     >
                       <FaHeart />
                     </button>
-                  )}
 
                   {user?.isAdmin && (
                     <div className="admin-controls">
                       <button
-                        className="admin-btn edit-btn"
-                        id="edit-btn"
-                        onClick={() => openEditModal(recipe)}
+                          className="admin-btn edit"
+                          onClick={() => {
+                            scrollToTop();
+                            navigate(`/recipes/${recipe._id}`);
+                          }}
                         title="Edit recipe"
                       >
-                        <FaPen  className="icon-pen"/>
+                          <FaPen />
                       </button>
                       <button
-                        className="admin-btn delete-btn"
+                          className="admin-btn delete"
                         onClick={() => handleDelete(recipe._id)}
                         title="Delete recipe"
                       >
@@ -417,230 +240,19 @@ const RecipePage = () => {
                     </div>
                   )}
                 </div>
-
-                <div 
-                  className="recipe-content"
-                  onClick={() => {
-                    scrollToTop();
-                    navigate(`/recipes/${recipe._id}`);
-                  }}
-                >
-                  <h2 className="recipe-card-title">{recipe.title}</h2>
-                  <hr/>
-                  
-                  {(recipe.prepTime || recipe.cookTime || recipe.servings) && (
-                    <div className="recipe-meta">
-                      {recipe.prepTime && <span className="meta-item">Prep: {recipe.prepTime}min</span>}
-                      {recipe.cookTime && <span className="meta-item">Cook: {recipe.cookTime}min</span>}
-                      {recipe.servings && <span className="meta-item">Serves: {recipe.servings}</span>}
-                    </div>
-                  )}
                 </div>
               </div>
             </article>
           ))}
         </div>
+      )}
+
+        <CreateRecipeModal
+          isOpen={modalIsOpen}
+          onClose={closeModal}
+          onRecipeCreated={handleRecipeCreated}
+        />
       </div>
-
-      {/* Modal for create/edit recipe */}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => {
-          setModalIsOpen(false);
-          setEditingRecipe(null);
-          resetForm();
-        }}
-        contentLabel={editingRecipe ? 'Edit Recipe' : 'Create Recipe'}
-        className="recipe-modal"
-        overlayClassName="modal-overlay"
-      >
-        <div className="modal-header">
-          <h2 className="modal-title">{editingRecipe ? 'Edit Recipe' : 'Create New Recipe'}</h2>
-          <button
-            className="modal-close"
-            onClick={() => {
-              setModalIsOpen(false);
-              setEditingRecipe(null);
-              resetForm();
-            }}
-          >
-            ×
-          </button>
-        </div>
-        
-        <div className="modal-body">
-          <form onSubmit={handleSubmit} className="recipe-form">
-            <div className="form-group">
-              <label className="form-label">Title*</label>
-              <input
-                type="text"
-                className="form-input"
-                value={title}
-                onChange={e => setTitle(e.target.value)}
-                required
-                placeholder="Enter recipe title"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Ingredients*</label>
-              <div className="ingredients-container">
-                {ingredients.map((ingredient, index) => (
-                  <div key={index} className="ingredient-row">
-                    <input
-                      type="text"
-                      className="form-input ingredient-input"
-                      value={ingredient}
-                      onChange={e => handleIngredientChange(index, e.target.value)}
-                      placeholder={`Ingredient ${index + 1}`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeIngredient(index)}
-                      className="remove-ingredient-btn"
-                      disabled={ingredients.length === 1}
-                      title="Remove ingredient"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-                <button 
-                  type="button" 
-                  onClick={addIngredient} 
-                  className="add-ingredient-btn"
-                >
-                  + Add Ingredient
-                </button>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Instructions*</label>
-              <textarea
-                className="form-textarea"
-                value={instructions}
-                onChange={e => setInstructions(e.target.value)}
-                rows="5"
-                required
-                placeholder="Enter cooking instructions"
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Prep Time (minutes)</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  value={prepTime}
-                  onChange={e => setPrepTime(e.target.value)}
-                  min="0"
-                  placeholder="0"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Cook Time (minutes)</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  value={cookTime}
-                  onChange={e => setCookTime(e.target.value)}
-                  min="0"
-                  placeholder="0"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Servings</label>
-                <input
-                  type="number"
-                  className="form-input"
-                  value={servings}
-                  onChange={e => setServings(e.target.value)}
-                  min="1"
-                  placeholder="1"
-                />
-              </div>
-            </div>
-
-            {/* Header Image Section */}
-            <div className="form-group">
-              <label className="form-label">Header Image</label>
-              <p className="form-hint">This will be the main image displayed on the recipe card</p>
-              <input
-                type="file"
-                className="form-file-input"
-                accept="image/*"
-                onChange={handleHeaderImageChange}
-              />
-              {imagePreview && (
-                <div className="image-preview-container">
-                  <div className="image-preview">
-                    <img src={imagePreview} alt="Header preview" />
-                    <button
-                      type="button"
-                      className="remove-image-btn"
-                      onClick={removeHeaderImage}
-                      title="Remove header image"
-                    >
-                      <FaTimes />
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Process Images Section */}
-            <div className="form-group">
-              <label className="form-label">Process Images</label>
-              <p className="form-hint">Upload up to 5 images showing the cooking process</p>
-              <input
-                type="file"
-                className="form-file-input"
-                accept="image/*"
-                multiple
-                onChange={handleProcessImagesChange}
-              />
-              {processImagePreviews.length > 0 && (
-                <div className="images-preview-container">
-                  {processImagePreviews.map((preview, index) => (
-                    <div key={index} className="image-preview">
-                      <img src={preview} alt={`Process ${index + 1}`} />
-                      <button
-                        type="button"
-                        className="remove-image-btn"
-                        onClick={() => removeProcessImage(index)}
-                        title="Remove process image"
-                      >
-                        <FaTimes />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="form-actions">
-              <button 
-                type="button" 
-                className="btn btn-secondary"
-                onClick={() => {
-                  setModalIsOpen(false);
-                  setEditingRecipe(null);
-                  resetForm();
-                }}
-              >
-                Cancel
-              </button>
-              <button type="submit" className="btn btn-primary">
-                {editingRecipe ? 'Update Recipe' : 'Create Recipe'}
-              </button>
-            </div>
-          </form>
-        </div>
-      </Modal>
     </div>
   );
 };

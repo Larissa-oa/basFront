@@ -6,6 +6,7 @@ import { AuthContext } from '../Context/AuthContext';
 import API_BASE_URL from '../config/api.js';
 import { uploadToCloudinary } from '../config/cloudinary.js';
 import Modal from 'react-modal';
+import RecipeComments from '../components/RecipeComments';
 import './PageStyles/RecipeDetailPage.css';
 
 Modal.setAppElement('#root');
@@ -136,8 +137,8 @@ const RecipeDetailPage = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    if (!title.trim() || !instructions.trim() || ingredients.some(ing => !ing.trim())) {
-      alert('Please fill all required fields.');
+    if (!title.trim() || !instructions.trim()) {
+      alert('Please fill in the title and instructions.');
       return;
     }
 
@@ -222,6 +223,7 @@ const RecipeDetailPage = () => {
 
   const imagesPerView = 3;
   const processImages = recipe?.processImages || [];
+  const displayedIngredients = (recipe?.ingredients || []).filter((ing) => typeof ing === 'string' && ing.trim());
   const maxIndex = Math.max(0, processImages.length - imagesPerView);
 
   const nextImage = () => setCurrentImageIndex((prev) => (prev < maxIndex ? prev + 1 : prev));
@@ -252,13 +254,15 @@ const RecipeDetailPage = () => {
             {recipe.servings && <p><strong>Servings:</strong> {recipe.servings}</p>}
           </div>
 
-          <div className="recipe-ingredients">
-            <h3>Ingredients</h3>
-            <ul>{recipe.ingredients?.map((item, i) => <li key={i}>{item}</li>)}</ul>
-          </div>
+          {displayedIngredients.length > 0 && (
+            <div className="recipe-ingredients">
+              <h3>Ingredients</h3>
+              <ul>{displayedIngredients.map((item, i) => <li key={i}>{item}</li>)}</ul>
+            </div>
+          )}
 
           <div className="recipe-instructions">
-            <h3>Instructions</h3>
+            <h3>{displayedIngredients.length > 0 ? 'Instructions' : 'Kitchen journal'}</h3>
             {recipe.instructions
               ? recipe.instructions.split('\n').map((step, i) => <p key={i}>{step}</p>)
               : <p>No instructions available.</p>}
@@ -312,7 +316,8 @@ const RecipeDetailPage = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Ingredients*</label>
+              <label className="form-label">Ingredients (optional)</label>
+              <p className="form-hint">Add ingredients for recipes, or leave empty for journal entries</p>
               {ingredients.map((ingredient, index) => (
                 <div key={index} className="ingredient-input-group">
                   <input
@@ -321,7 +326,6 @@ const RecipeDetailPage = () => {
                     value={ingredient}
                     onChange={e => handleIngredientChange(index, e.target.value)}
                     placeholder={`Ingredient ${index + 1}`}
-                    required
                   />
                   {ingredients.length > 1 && (
                     <button
@@ -345,12 +349,13 @@ const RecipeDetailPage = () => {
 
             <div className="form-group">
               <label className="form-label">Instructions*</label>
+              <p className="form-hint">Write detailed instructions for recipes, or describe your experience for journal entries</p>
               <textarea
                 className="form-textarea"
                 value={instructions}
                 onChange={e => setInstructions(e.target.value)}
                 rows="8"
-                placeholder="Write your recipe instructions here..."
+                placeholder="Write your recipe instructions or journal entry here..."
                 required
               />
             </div>
@@ -531,6 +536,9 @@ const RecipeDetailPage = () => {
           </form>
         </div>
       </Modal>
+      
+      {/* Comments Section */}
+      <RecipeComments />
     </article>
   );
 };

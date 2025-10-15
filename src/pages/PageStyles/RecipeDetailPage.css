@@ -10,8 +10,8 @@
 .recipe-detail-page {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-weight: 300;
-  color: #1a1a1a;
-  background-color: #fff;
+  color: #4a3420;
+  background: transparent;
   min-height: 100vh;
   padding: 3rem 2rem; /* Restore normal padding */
   max-width: 1400px;
@@ -110,7 +110,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #1a1a1a;
+  color: #6b4423;
   background: none;
   border: none;
   cursor: pointer;
@@ -124,7 +124,7 @@
 }
 
 .back-btn:hover {
-  color: #000000;
+  color: #2c1810;
 }
 
 .back-icon {
@@ -137,7 +137,7 @@
   font-family: var(--font-display);
   font-size: 2.5rem;
   font-weight: var(--font-weight-light);
-  color: #000000;
+  color: #2c1810;
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
@@ -174,7 +174,7 @@
 
 .recipe-ingredients ul {
   list-style: disc inside;
-  color: #333;
+  color: #6b4423;
   font-weight: 300;
   font-size: 1rem;
   line-height: 1.6;
@@ -189,7 +189,7 @@
   font-weight: 300;
   line-height: 1.7;
   font-size: 1rem;
-  color: #333333;
+  color: #4a3420;
 }
 
 @media (min-width: 1024px) {
@@ -202,7 +202,7 @@
 .recipe-process-images {
   margin-top: 4rem;
   padding: 3rem;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+  background: transparent;
   border-radius: 0;
   position: relative;
   overflow: hidden;
@@ -233,7 +233,7 @@
 .recipe-process-images h3 {
   font-family: var(--font-display);
   font-weight: var(--font-weight-medium);
-  color: var(--color-dark);
+  color: #2c1810;
   margin-bottom: 2rem;
   font-size: 1.5rem;
   letter-spacing: 0.1em;
@@ -266,7 +266,7 @@
 
 .process-images-gallery img {
   width: 100%;
-  height: 250px;
+  height: 300px;
   object-fit: cover;
   border-radius: 0;
   cursor: pointer;
@@ -301,22 +301,54 @@
 }
 
 @media (max-width: 768px) {
+  .recipe-detail-page {
+    overflow-x: visible !important;
+  }
+  
+  .recipe-layout {
+    overflow-x: visible !important;
+  }
+  
   .recipe-process-images {
-    padding: 2rem 1.5rem;
-  }
-  
-  .process-images-gallery {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    justify-items: center;
-  }
-  
-  .process-images-gallery img {
-    height: 200px;
+    padding: 2rem 0;
+    margin-left: -2rem;
+    margin-right: -2rem;
+    overflow: visible !important;
   }
   
   .recipe-process-images h3 {
     font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .process-images-gallery {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+    padding: 0 2rem 1rem 2rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .process-images-gallery::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .process-images-gallery img {
+    flex-shrink: 0;
+    width: 280px;
+    height: 320px;
+    object-fit: cover;
+    scroll-snap-align: start;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    filter: grayscale(20%) brightness(0.95);
+  }
+  
+  .process-images-gallery img:first-child {
+    margin-left: 6rem;
   }
 }
 
@@ -342,7 +374,7 @@
 }
 
 .icon-button:hover {
-  color: #000;
+  color: #2c1810;
   border-color: #000;
 }
 
@@ -432,3 +464,157 @@
   background: linear-gradient(to right, transparent, var(--color-gray), transparent);
   opacity: 0.6;
 }
+  
+  /* ================= Create / Edit Recipe Modal (improve readability) ================ */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9998;
+  }
+
+  .modal {
+    position: relative;
+    margin: 4vh auto;
+    background: rgba(255, 255, 255, 0.98);
+    color: #2c1810;
+    max-width: 760px;
+    width: calc(100% - 2rem);
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    padding: 24px 24px 16px 24px;
+    z-index: 9999;
+  }
+
+  .modal h2 {
+    font-family: var(--font-display);
+    font-weight: var(--font-weight-medium);
+    color: #ffffff;
+    margin: 0 0 20px 0;
+    font-size: 1.5rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .edit-recipe-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-group .form-label {
+    color: #ffffff;
+    font-weight: var(--font-weight-medium);
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    display: block;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-file-input {
+    background: rgba(255, 255, 255, 0.95);
+    color: #2c1810;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+  }
+
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: #666;
+    opacity: 1;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-file-input:focus {
+    outline: none;
+    border-color: #2c1810;
+    box-shadow: 0 0 0 3px rgba(44, 24, 16, 0.1);
+  }
+
+  .form-file-input {
+    cursor: pointer;
+    background: rgba(248, 248, 248, 0.95);
+    border: 2px dashed rgba(0, 0, 0, 0.2);
+    text-align: center;
+    padding: 16px;
+  }
+
+  .form-file-input:hover {
+    border-color: #2c1810;
+    background: rgba(248, 248, 248, 1);
+  }
+
+  .form-hint {
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 4px;
+  }
+
+  /* Ingredients styling for optional field */
+  .ingredient-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .ingredient-input-group .form-input {
+    flex: 1;
+  }
+
+  .remove-ingredient-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .add-ingredient-btn {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .add-ingredient-btn:hover {
+    background: #ffffff;
+    color: #2c1810;
+  }
+
+  /* Form row for time/servings */
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .modal {
+      margin: 2vh auto;
+      width: calc(100% - 1.5rem);
+      padding: 20px 16px 12px 16px;
+    }
+  }

@@ -4,20 +4,27 @@ import axios from 'axios';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { scrollToTop } from '../utils/scrollToTop';
 import API_BASE_URL from '../config/api.js';
+import './ComponentsStyles/RecipeSlider.css';
 
 const RecipeSlider = () => {
   const [recipes, setRecipes] = useState([]);
-  const [isAtStart, setIsAtStart] = useState(true);
-  const [isAtEnd, setIsAtEnd] = useState(false);
-  const recipesSliderRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const sliderRef = useRef(null);
   const navigate = useNavigate();
 
+  // Fetch recipes
   useEffect(() => {
-    // Fetch latest recipes
     axios.get(`${API_BASE_URL}/recipes?limit=8&sort=-createdAt`)
       .then(res => {
         if (Array.isArray(res.data)) {
-          setRecipes(res.data);
+          const sorted = [...res.data].sort((a, b) => {
+            const ta = a?.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const tb = b?.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return tb - ta; // newest first (left)
+          });
+          setRecipes(sorted);
         }
       })
       .catch(err => {
@@ -26,43 +33,27 @@ const RecipeSlider = () => {
       });
   }, []);
 
-  // Check scroll position and update state
-  const checkScrollPosition = () => {
-    if (recipesSliderRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = recipesSliderRef.current;
-      setIsAtStart(scrollLeft <= 0);
-      setIsAtEnd(scrollLeft >= scrollWidth - clientWidth - 1);
-    }
-  };
-
-  // Add scroll event listener
+  // Update button states based on current index
   useEffect(() => {
-    const slider = recipesSliderRef.current;
-    if (slider) {
-      slider.addEventListener('scroll', checkScrollPosition);
-      // Initial check
-      checkScrollPosition();
-      
-      return () => {
-        slider.removeEventListener('scroll', checkScrollPosition);
-      };
-    }
-  }, [recipes]);
+    setCanScrollLeft(currentIndex > 0);
+    setCanScrollRight(currentIndex < recipes.length - 1);
+  }, [currentIndex, recipes.length]);
 
-  const slideLeft = (ref) => {
-    if (ref.current) {
-      const scrollAmount = Math.min(400, ref.current.clientWidth * 0.8);
-      ref.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  // Scroll left
+  const scrollLeft = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1);
     }
   };
 
-  const slideRight = (ref) => {
-    if (ref.current) {
-      const scrollAmount = Math.min(400, ref.current.clientWidth * 0.8);
-      ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  // Scroll right
+  const scrollRight = () => {
+    if (currentIndex < recipes.length - 1) {
+      setCurrentIndex(prev => prev + 1);
     }
   };
 
+  // Format date
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -81,23 +72,35 @@ const RecipeSlider = () => {
     <section className="section recipes">
       <div className="container">
         <div className="slider-section">
+          {/* Header Content */}
           <div className="section-header-content">
-            <h2 className="slider-title">Featured Recipes</h2>
+            <h2 className="slider-title">From our kitchen</h2>
             <p className="section-intro">
-              Explore our curated collection of innovative recipes that showcase our unique approach to modern gastronomy.
+            A glimpse into dishes that tell a story — rooted in nature, and guided by flavor.
             </p>
-            <button className="explore-button" onClick={() => {
-              scrollToTop();
-              navigate('/recipes');
-            }}>
+            <button 
+              className="explore-button" 
+              onClick={() => {
+                scrollToTop();
+                navigate('/recipes');
+              }}
+            >
               Explore all
               <ArrowRight size={14} />
             </button>
           </div>
           
-          <div className={`slider-container ${isAtStart ? 'at-start' : ''} ${isAtEnd ? 'at-end' : ''}`}>
-            <div className="slider" ref={recipesSliderRef}>
-              {recipes.map((recipe) => (
+          {/* Slider Container */}
+          <div className="slider-wrapper">
+            <div className="slider-container">
+              <div 
+                className="slider-track"
+                style={{ 
+                  transform: `translateX(-${currentIndex * (260 + 16)}px)`,
+                  transition: 'transform 0.3s ease-in-out'
+                }}
+              >
+                {recipes.map((recipe) => (
                 <div 
                   key={recipe._id} 
                   className="media-card"
@@ -117,9 +120,6 @@ const RecipeSlider = () => {
                   aria-label={`View recipe: ${recipe.title}`}
                 >
                   <div className="media-image">
-                    <div className="media-date">
-                      {formatDate(recipe.createdAt)}
-                    </div>
                     {recipe.headerImage ? (
                       <img
                         src={recipe.headerImage.startsWith('http') ? recipe.headerImage : `${API_BASE_URL}${recipe.headerImage}`}
@@ -137,23 +137,27 @@ const RecipeSlider = () => {
                     <span className="media-timestamp">{formatDate(recipe.createdAt)}</span>
                   </div>
                 </div>
-              ))}
+                ))}
+                {/* Add white space after last card */}
+                <div className="slider-whitespace"></div>
+              </div>
             </div>
             
+            {/* Slider Controls */}
             <div className="slider-controls">
               <button 
-                onClick={() => slideLeft(recipesSliderRef)}
-                className={`slider-btn prev ${isAtStart ? 'disabled' : ''}`}
+                onClick={scrollLeft}
+                className="slider-btn prev"
                 aria-label="Previous recipes"
-                disabled={isAtStart}
+                disabled={!canScrollLeft}
               >
                 <ChevronLeft size={20} />
               </button>
               <button 
-                onClick={() => slideRight(recipesSliderRef)}
-                className={`slider-btn ${isAtEnd ? 'disabled' : ''}`}
+                onClick={scrollRight}
+                className="slider-btn"
                 aria-label="Next recipes"
-                disabled={isAtEnd}
+                disabled={!canScrollRight}
               >
                 <ChevronRight size={20} />
               </button>
@@ -165,4 +169,4 @@ const RecipeSlider = () => {
   );
 };
 
-export default RecipeSlider; 
+export default RecipeSlider;

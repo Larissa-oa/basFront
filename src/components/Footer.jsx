@@ -1,16 +1,59 @@
 import React, { useState } from 'react'
 import { FaInstagram, FaLinkedin } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import API_BASE_URL from '../config/api.js'
 import './ComponentsStyles/Footer.css'
 
 const Footer = () => {
   const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
+  const [messageType, setMessageType] = useState('') // 'success' or 'error'
 
-  const handleNewsletterSubmit = (e) => {
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault()
-    // Handle newsletter subscription
-    console.log('Newsletter subscription:', email)
-    setEmail('')
+    
+    if (!email.trim()) {
+      setMessage('Please enter a valid email address')
+      setMessageType('error')
+      return
+    }
+
+    setLoading(true)
+    setMessage('')
+    setMessageType('')
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/newsletter/subscribe`, {
+        email: email.trim()
+      })
+
+      setMessage(response.data.message || 'Successfully subscribed to newsletter!')
+      setMessageType('success')
+      setEmail('')
+      
+      // Clear message after 5 seconds
+      setTimeout(() => {
+        setMessage('')
+        setMessageType('')
+      }, 5000)
+
+    } catch (error) {
+      console.error('Newsletter subscription error:', error)
+      setMessage(
+        error.response?.data?.message || 'Failed to subscribe. Please try again.'
+      )
+      setMessageType('error')
+      
+      // Clear error message after 5 seconds
+      setTimeout(() => {
+        setMessage('')
+        setMessageType('')
+      }, 5000)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -29,11 +72,18 @@ const Footer = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
-            <button type="submit" className="newsletter-button">
-              Subscribe
+            <button type="submit" className="newsletter-button" disabled={loading}>
+              {loading ? 'Subscribing...' : 'Subscribe'}
             </button>
           </form>
+          
+          {message && (
+            <div className={`newsletter-message ${messageType}`}>
+              {message}
+            </div>
+          )}
         </div>
 
         <div className="footer-column">
@@ -41,7 +91,6 @@ const Footer = () => {
           <ul className="footer-list">
             <li><Link to="/about" className="footer-link">About</Link></li>
             <li><a href="mailto:info@restaurantflore.com" className="footer-link">Contact Bas</a></li>
-            <li><Link to="/journal" className="footer-link">Journal</Link></li>
             <li><Link to="/recipes" className="footer-link">Recipes</Link></li>
           </ul>
         </div>
@@ -55,8 +104,13 @@ const Footer = () => {
               </a>
             </li>
             <li>
-              <a href="https://restaurantflore.com/reservations" className="footer-link" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.sevenrooms.com/explore/restaurantflore/reservations/create/search?lang=en&tracking=flore-website" className="footer-link" target="_blank" rel="noopener noreferrer">
                 Reservations
+              </a>
+            </li>
+            <li>
+              <a href="https://restaurantflore.com/#menus" className="footer-link" target="_blank" rel="noopener noreferrer">
+                Explore Menu
               </a>
             </li>
             <li>
