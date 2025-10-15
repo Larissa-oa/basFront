@@ -251,8 +251,9 @@
 }
 
 .flore-section .section-content {
-  flex-direction: row-reverse;
+  flex-direction: row;
 }
+
 
 .flore-text {
   flex: 1;
@@ -466,13 +467,27 @@
   .about-section {
     padding: 0 40px;
     min-height: auto;
-    padding-top: 100px;
-    padding-bottom: 100px;
+    padding-top: 60px;
+    padding-bottom: 60px;
   }
   
   .section-content {
     flex-direction: column !important;
-    gap: 50px;
+    gap: 30px;
+  }
+  
+  /* Force Flore section to show image first, then text on mobile */
+  .flore-section .section-content {
+    flex-direction: column !important;
+    display: flex !important;
+  }
+  
+  .flore-image-container {
+    order: 1 !important;
+  }
+  
+  .flore-text {
+    order: 2 !important;
   }
   
   .intro-text,
@@ -500,7 +515,7 @@
   }
   
   .final-image-container {
-    height: 50px;
+    height: 0;
     margin: 0 20px;
   }
   

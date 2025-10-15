@@ -87,6 +87,27 @@
   width: fit-content;
 }
 
+/* Enable touch scrolling on mobile */
+@media (max-width: 768px) {
+  .slider-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .slider-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .slider-track {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* White space after last card */
 .slider-whitespace {
   width: 200px;
@@ -292,27 +313,31 @@
 
 @media (max-width: 768px) {
   .slider-section {
-    gap: var(--spacing-md);
+    gap: var(--spacing-xl);
     grid-template-columns: 1fr;
   }
   
   .section-header-content {
-    padding-bottom: var(--spacing-md);
-    padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
+    padding-bottom: var(--spacing-lg);
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
     text-align: left;
-    max-width: 70%;
+    max-width: 100%;
+    z-index: 10;
+    position: relative;
+    background: transparent;
   }
   
   .slider-title {
     font-size: clamp(1.8rem, 6vw, 2.5rem);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
   }
   
   .section-intro {
     font-size: 1rem;
-    line-height: 1.5;
-    margin-bottom: var(--spacing-sm);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+    max-width: 100%;
   }
   
   .explore-button {
@@ -323,19 +348,19 @@
   .slider-wrapper {
     margin-left: 0;
     margin-right: calc(-50vw + 50%);
+    margin-top: var(--spacing-md);
   }
   
   .slider-container {
-    padding: 0 0 var(--spacing-sm) var(--spacing-md);
+    padding: 0 var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
   }
   
   .slider-track {
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
   }
   
   .media-card {
     flex: 0 0 260px;
-    margin: 0 0.5rem;
   }
   
   .media-image {
@@ -361,45 +386,33 @@
   }
   
   .slider-controls {
-    top: 10px;
-    left: var(--spacing-md);
-    gap: 6px;
-  }
-  
-  .slider-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 3px;
-  }
-  
-  .slider-btn svg {
-    width: 16px;
-    height: 16px;
+    display: none !important;
   }
 }
 
 @media (max-width: 480px) {
   .slider-section {
-    gap: var(--spacing-sm);
+    gap: var(--spacing-lg);
   }
   
   .section-header-content {
-    padding-bottom: var(--spacing-sm);
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
+    padding-bottom: var(--spacing-md);
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
     text-align: left;
+    max-width: 100%;
   }
   
   .slider-title {
     font-size: clamp(1.6rem, 7vw, 2.2rem);
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
   }
   
   .section-intro {
     font-size: 0.95rem;
-    line-height: 1.4;
-    margin-bottom: var(--spacing-xs);
-    max-width: 70%;
+    line-height: 1.5;
+    margin-bottom: var(--spacing-sm);
+    max-width: 100%;
   }
   
   .explore-button {
@@ -409,19 +422,19 @@
   
   .slider-wrapper {
     margin-right: calc(-50vw + 50%);
+    margin-top: var(--spacing-sm);
   }
   
   .slider-container {
-    padding: 0 0 var(--spacing-sm) var(--spacing-sm);
+    padding: 0 var(--spacing-md) var(--spacing-sm) var(--spacing-md);
   }
   
   .slider-track {
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
   }
   
   .media-card {
     flex: 0 0 220px;
-    margin: 0 0.25rem;
   }
   
   .media-image {
@@ -447,20 +460,7 @@
   }
   
   .slider-controls {
-    top: 8px;
-    left: var(--spacing-sm);
-    gap: 4px;
-  }
-  
-  .slider-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 2px;
-  }
-  
-  .slider-btn svg {
-    width: 14px;
-    height: 14px;
+    display: none !important;
   }
 }
 

@@ -149,6 +149,9 @@ const AboutPage = () => {
       <section ref={floreRef} className="about-section flore-section">
         <div className="section-number">03</div>
         <div className="section-content">
+          <div className="flore-image-container">
+            <img src={aboutbasFlore} alt="Farm Connection" className="flore-image" />
+          </div>
           <div className="flore-text">
             <h2 className="section-subtitle">Flore</h2>
             <p>
@@ -160,9 +163,6 @@ const AboutPage = () => {
               Through direct partnerships with growers and artisans, Bas ensures that the journey 
               from farm to plate is one of respect, quality, and authenticity.
             </p>
-          </div>
-          <div className="flore-image-container">
-            <img src={aboutbasFlore} alt="Farm Connection" className="flore-image" />
           </div>
         </div>
       </section>

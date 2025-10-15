@@ -587,10 +587,10 @@ html {
   
   .hero-video {
     position: absolute;
-    top: 0;
+    top: -5vh;
     left: 0;
     width: 100%;
-    height: 115%;
+    height: 120%;
     transform: none;
     object-fit: cover;
     object-position: center top;

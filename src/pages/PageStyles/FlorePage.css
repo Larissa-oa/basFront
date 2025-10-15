@@ -608,7 +608,7 @@ html, body {
   }
   
   .philosophy-section {
-    margin-top: calc(100vh - 220px - 60px);
+    margin-top: calc(100vh - 220px - 60px + 3rem);
   }
   
   .flore-path-line {

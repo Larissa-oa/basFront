@@ -73,7 +73,7 @@
 .recipe-header {
   position: relative;
   padding: var(--spacing-2xl) 0 var(--spacing-xl);
-  background: transparent;
+  background: #e8e4d8;
   text-align: center;
   overflow: hidden;
   margin: 0; /* Restore default full width */
@@ -770,6 +770,7 @@
 @media (max-width: 768px) {
   .recipe-header {
     padding: var(--spacing-xl) 0 var(--spacing-lg);
+    background: #e8e4d8 !important;
   }
   
   .recipe-controls {
@@ -785,12 +786,21 @@
   
   .recipe-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
     padding: 0;
   }
   
   .recipe-grid-container {
     padding: 0;
+  }
+  
+  .recipe-content {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .recipe-card-title {
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-xs);
   }
   
   .recipe-modal {
@@ -841,7 +851,7 @@
   
   .recipe-header {
     padding: var(--spacing-xl) 0 var(--spacing-lg);
-    background: linear-gradient(45deg, #f8f6f0 0%, #f0ede5 25%, #e8e4d8 50%, #f0ede5 75%, #f8f6f0 100%);
+    background: #e8e4d8 !important;
   }
   
   .recipe-header::before {
@@ -874,14 +884,16 @@
   
   .recipe-grid {
     padding: 0;
+    gap: var(--spacing-sm);
   }
   
   .recipe-content {
-    padding: var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
   
   .recipe-card-title {
-    font-size: 1.125rem;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
   }
 }
 
