@@ -7,6 +7,7 @@
   background-size: 400% 400%;
   animation: gradientShift 20s ease infinite;
   overflow-x: hidden;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -465,11 +466,17 @@
 }
 
 @media (max-width: 768px) {
+  .about-page {
+    overflow-y: scroll;
+    height: auto;
+  }
+  
   .about-section {
     padding: 0 40px;
     min-height: auto;
     padding-top: 40px;
     padding-bottom: 40px;
+    touch-action: pan-y;
   }
   
   .section-content {
@@ -500,11 +507,17 @@
   
   .about-path-line {
     right: 30px;
+    pointer-events: none;
   }
   
   .section-number {
     right: 15px;
     font-size: 14px;
+    pointer-events: none;
+  }
+  
+  .floating-element {
+    display: none;
   }
   
   .intro-image-container,
@@ -532,20 +545,33 @@
 }
 
 @media (max-width: 480px) {
+  .about-page {
+    overflow-y: scroll;
+    height: auto;
+  }
+  
   .about-section {
     padding: 0 20px;
     padding-top: 40px;
     padding-bottom: 40px;
+    min-height: auto;
+    touch-action: pan-y;
   }
   
   .about-path-line {
     right: 15px;
+    pointer-events: none;
   }
   
   .section-number {
     right: 0;
     font-size: 12px;
     padding: 6px 10px;
+    pointer-events: none;
+  }
+  
+  .floating-element {
+    display: none;
   }
   
   .section-title {
