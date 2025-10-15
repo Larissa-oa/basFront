@@ -2,16 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { MdDelete, MdEdit, MdFavorite, MdRestaurant, MdBook, MdLogout } from "react-icons/md";
+import { MdDelete, MdEdit, MdRestaurant, MdLogout } from "react-icons/md";
 import { scrollToTop } from "../utils/scrollToTop";
 import API_BASE_URL from "../config/api.js";
-import floreBackground from "../assets/images/florebackground.jpg";
 import "./PageStyles/ProfilePage.css";
 
 const ProfilePage = () => {
   const { user, loading, logout, setUser } = useContext(AuthContext);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
-  const [favoriteJournals, setFavoriteJournals] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState("");
 
@@ -33,17 +31,11 @@ const ProfilePage = () => {
     const fetchFavorites = async () => {
       try {
         const token = localStorage.getItem("token");
-        const [recipesRes, journalsRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/auth/favorites/recipes`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`${API_BASE_URL}/auth/favorites/journals`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ]);
+        const recipesRes = await axios.get(`${API_BASE_URL}/auth/favorites/recipes`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         setFavoriteRecipes(Array.isArray(recipesRes.data) ? recipesRes.data : []);
-        setFavoriteJournals(Array.isArray(journalsRes.data) ? journalsRes.data : []);
       } catch (err) {
         console.error("Error fetching favorites:", err);
         setError("Failed to load favorites.");
@@ -55,20 +47,16 @@ const ProfilePage = () => {
     fetchFavorites();
   }, [user?._id]);
 
-  const handleDeleteFavorite = async (type, id) => {
+  const handleDeleteFavorite = async (id) => {
     if (!window.confirm("Remove this from favorites?")) return;
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${API_BASE_URL}/auth/favorites/${type}s/${id}`, {
+      await axios.delete(`${API_BASE_URL}/auth/favorites/recipes/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (type === "recipe") {
-        setFavoriteRecipes((prev) => prev.filter((r) => r._id !== id));
-      } else {
-        setFavoriteJournals((prev) => prev.filter((j) => j._id !== id));
-      }
+      setFavoriteRecipes((prev) => prev.filter((r) => r._id !== id));
     } catch (err) {
       console.error("Error deleting favorite:", err);
       alert("Failed to remove favorite.");
@@ -127,123 +115,128 @@ const ProfilePage = () => {
     navigate('/login');
   };
 
-  const handleFavoriteClick = (type, id) => {
+  const handleFavoriteClick = (id) => {
     scrollToTop();
-    navigate(`/${type}s/${id}`);
+    navigate(`/recipes/${id}`);
   };
 
   if (loading || loadingData) return <p className="nx-loading-state">Loading...</p>;
   if (!user) return <p className="nx-no-user-state">You must be logged in to view your profile.</p>;
 
   return (
-    <main 
-      className="nx-profile-container"
-      style={{
-        backgroundImage: `url(${floreBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        backgroundRepeat: 'no-repeat'
-      }}
-    >
-      <section className="nx-hero-section">
-        {/* Top Action Buttons */}
-        <div className="nx-top-actions">
-          {isEditing ? (
-            <>
-              <button onClick={handleSaveProfile} className="nx-save-button">Save</button>
-              <button onClick={handleEditToggle} className="nx-cancel-button">Cancel</button>
-            </>
-          ) : (
-            <>
-              <button onClick={handleEditToggle} className="nx-edit-button" aria-label="Edit Profile">
-                <MdEdit />
-              </button>
-              <button onClick={handleLogout} className="nx-logout-button" aria-label="Logout">
-                <MdLogout />
-              </button>
-            </>
-          )}
-        </div>
+    <main className="profile-page">
+      {/* Header Section */}
+      <section className="profile-header">
+        <div className="profile-header-content">
+          <div className="profile-header-top">
+            {isEditing ? (
+              <div className="profile-edit-actions">
+                <button onClick={handleSaveProfile} className="profile-btn profile-btn-save">
+                  Save Changes
+                </button>
+                <button onClick={handleEditToggle} className="profile-btn profile-btn-cancel">
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="profile-actions">
+                <button onClick={handleEditToggle} className="profile-icon-btn" aria-label="Edit Profile">
+                  <MdEdit />
+                </button>
+                <button onClick={handleLogout} className="profile-icon-btn profile-logout-btn" aria-label="Logout">
+                  <MdLogout />
+                </button>
+              </div>
+            )}
+          </div>
 
-        <div className="nx-user-details">
-          {isEditing ? (
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="nx-name-editor"
-              autoFocus
-              maxLength={50}
-            />
-          ) : (
-            <h1 className="nx-user-title">Hello, {user.name}</h1>
-          )}
-          <p className="nx-user-email">{user.email}</p>
+          <div className="profile-user-info">
+            {isEditing ? (
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="profile-name-input"
+                autoFocus
+                maxLength={50}
+                placeholder="Your name"
+              />
+            ) : (
+              <>
+                <h1 className="profile-greeting">Hello,</h1>
+                <h2 className="profile-name">{user.name}</h2>
+              </>
+            )}
+            <p className="profile-email">{user.email}</p>
+          </div>
         </div>
       </section>
 
-      <section className="nx-collections-section">
-        <div className="nx-collection-card">
-          <div className="nx-collection-header">
-            <MdRestaurant className="nx-collection-icon" />
-            <h2>Favorite Recipes</h2>
-            <span className="nx-collection-count">{favoriteRecipes.length}</span>
+      {/* Favorites Section */}
+      <section className="profile-favorites-section">
+        <div className="profile-container">
+          <div className="profile-section-header">
+            <div className="profile-section-title-wrapper">
+              <MdRestaurant className="profile-section-icon" />
+              <h3 className="profile-section-title">Saved Recipes</h3>
+            </div>
+            <span className="profile-count-badge">{favoriteRecipes.length}</span>
           </div>
           
           {favoriteRecipes.length > 0 ? (
-            <div className="nx-favorites-grid">
+            <div className="profile-recipes-grid">
               {favoriteRecipes.map((recipe) => (
-                <div key={recipe._id} className="nx-favorite-item">
+                <article key={recipe._id} className="profile-recipe-card">
                   <div 
-                    className="nx-favorite-image-container"
-                    onClick={() => handleFavoriteClick("recipe", recipe._id)}
+                    className="profile-recipe-image-wrapper"
+                    onClick={() => handleFavoriteClick(recipe._id)}
                   >
                     {recipe.headerImage ? (
                       <img
                         src={recipe.headerImage.startsWith('http') ? recipe.headerImage : `${API_BASE_URL}${recipe.headerImage}`}
                         alt={recipe.title}
-                        className="nx-favorite-image"
+                        className="profile-recipe-image"
                         onError={(e) => {
                           e.target.style.display = 'none';
                           e.target.nextSibling.style.display = 'flex';
                         }}
                       />
                     ) : null}
-                    <div className="nx-favorite-placeholder">
+                    <div className="profile-recipe-placeholder">
                       <MdRestaurant />
-                    </div>
-                    <div className="nx-favorite-overlay">
-                      <span>View Recipe</span>
                     </div>
                   </div>
                   
-                  <div className="nx-favorite-content">
-                    <h3 className="nx-favorite-title">{recipe.title}</h3>
+                  <div className="profile-recipe-content">
+                    <h4 className="profile-recipe-title">{recipe.title}</h4>
                     {(recipe.prepTime || recipe.cookTime) && (
-                      <div className="nx-favorite-meta">
-                        {recipe.prepTime && <span>Prep: {recipe.prepTime}min</span>}
-                        {recipe.cookTime && <span>Cook: {recipe.cookTime}min</span>}
+                      <div className="profile-recipe-meta">
+                        {recipe.prepTime && <span>{recipe.prepTime} min prep</span>}
+                        {recipe.prepTime && recipe.cookTime && <span className="meta-dot">·</span>}
+                        {recipe.cookTime && <span>{recipe.cookTime} min cook</span>}
                       </div>
                     )}
                   </div>
                   
                   <button
-                    className="nx-remove-favorite"
-                    onClick={() => handleDeleteFavorite("recipe", recipe._id)}
+                    className="profile-remove-btn"
+                    onClick={() => handleDeleteFavorite(recipe._id)}
                     aria-label={`Remove ${recipe.title} from favorites`}
                   >
                     <MdDelete />
                   </button>
-                </div>
+                </article>
               ))}
             </div>
           ) : (
-            <div className="nx-empty-state">
-              <MdRestaurant className="nx-empty-icon" />
-              <p>No favorite recipes yet.</p>
+            <div className="profile-empty-state">
+              <div className="empty-icon-wrapper">
+                <MdRestaurant className="empty-icon" />
+              </div>
+              <p className="empty-message">No saved recipes yet</p>
+              <p className="empty-submessage">Start building your collection</p>
               <button 
-                className="nx-explore-button"
+                className="profile-btn profile-btn-primary"
                 onClick={() => {
                   scrollToTop();
                   navigate('/recipes');
@@ -254,79 +247,9 @@ const ProfilePage = () => {
             </div>
           )}
         </div>
-
-        <div className="nx-collection-card">
-          <div className="nx-collection-header">
-            <MdBook className="nx-collection-icon" />
-            <h2>Favorite Journals</h2>
-            <span className="nx-collection-count">{favoriteJournals.length}</span>
-          </div>
-          
-          {favoriteJournals.length > 0 ? (
-            <div className="nx-favorites-grid">
-              {favoriteJournals.map((journal) => (
-                <div key={journal._id} className="nx-favorite-item">
-                  <div 
-                    className="nx-favorite-image-container"
-                    onClick={() => handleFavoriteClick("journal", journal._id)}
-                  >
-                    {journal.mainImage ? (
-                      <img
-                        src={journal.mainImage.startsWith('http') ? journal.mainImage : `${API_BASE_URL}${journal.mainImage}`}
-                        alt={journal.title}
-                        className="nx-favorite-image"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
-                        }}
-                      />
-                    ) : null}
-                    <div className="nx-favorite-placeholder">
-                      <MdBook />
-                    </div>
-                    <div className="nx-favorite-overlay">
-                      <span>View Journal</span>
-                    </div>
-                  </div>
-                  
-                  <div className="nx-favorite-content">
-                    <h3 className="nx-favorite-title">{journal.title}</h3>
-                    {journal.createdAt && (
-                      <div className="nx-favorite-meta">
-                        <span>Created: {new Date(journal.createdAt).toLocaleDateString()}</span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <button
-                    className="nx-remove-favorite"
-                    onClick={() => handleDeleteFavorite("journal", journal._id)}
-                    aria-label={`Remove ${journal.title} from favorites`}
-                  >
-                    <MdDelete />
-                  </button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="nx-empty-state">
-              <MdBook className="nx-empty-icon" />
-              <p>No favorite journals yet.</p>
-              <button 
-                className="nx-explore-button"
-                onClick={() => {
-                  scrollToTop();
-                  navigate('/journals');
-                }}
-              >
-                Explore Journals
-              </button>
-            </div>
-          )}
-        </div>
       </section>
 
-      {error && <p className="nx-error-message">{error}</p>}
+      {error && <div className="profile-error">{error}</div>}
     </main>
   );
 };

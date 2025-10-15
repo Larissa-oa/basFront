@@ -1,867 +1,608 @@
-/* Modern & Elegant Profile Page */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+/* Elegant Minimalistic Profile Page - Architectural Design */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 :root {
+  --color-text-primary: #4a3420;
+  --color-text-secondary: #3d2914;
+  --color-text-light: #6b4423;
+  --color-text-muted: #999999;
   --color-black: #000000;
-  --color-dark: #111111;
-  --color-gray: #666666;
-  --color-light-gray: #999999;
   --color-white: #ffffff;
-  --color-off-white: #fafafa;
-  --color-bg-light: #f8f8f8;
-  --color-bg-dark: #f0f0f0;
-  --color-accent: #2c2c2c;
+  --color-bg-warm: #f8f6f0;
+  --color-bg-light: #f0ede5;
+  --color-bg-accent: #e8e4d8;
   
   --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
-  --font-weight-extralight: 200;
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
   
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 1rem;
-  --spacing-md: 1.5rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 3rem;
-  --spacing-2xl: 4rem;
-  --spacing-3xl: 6rem;
-  
-  --border-radius: 0;
   --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --transition-slow: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --transition-fast: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Base Layout */
-.nx-profile-container {
+.profile-page {
   min-height: 100vh;
+  background: linear-gradient(45deg, #f8f6f0 0%, #f0ede5 25%, #e8e4d8 50%, #f0ede5 75%, #f8f6f0 100%);
   font-family: var(--font-primary);
-  color: var(--color-dark);
+  color: var(--color-text-primary);
   padding: 0;
-  line-height: 1.6;
-  font-weight: var(--font-weight-normal);
-  position: relative;
-  width: 100%;
   margin: 0;
-  z-index: 1;
 }
 
-.nx-profile-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 1;
+/* Header Section */
+.profile-header {
+  padding: calc(var(--spacing-xl, 3rem) + 80px) 2rem 4rem;
+  background: linear-gradient(180deg, 
+    rgba(232, 228, 216, 0.4) 0%, 
+    transparent 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.nx-profile-container > * {
+.profile-header-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--spacing-lg);
-  position: relative;
-  z-index: 2;
 }
 
-@media (max-width: 768px) {
-  .nx-profile-container {
-    padding: 0;
-    margin-top: 0;
-  }
-  
-  .nx-profile-container > * {
-    padding: 0 var(--spacing-md);
-  }
-  
-  .navbar-mobile {
-    color: var(--color-black) !important;
-  }
-  
-  .navbar-mobile .mobile-logo {
-    color: var(--color-black) !important;
-  }
-  
-  .navbar-mobile .mobile-menu-btn {
-    color: var(--color-black) !important;
-  }
-  
-  .navbar-mobile .mobile-logo:hover {
-    color: var(--color-black) !important;
-  }
-  
-  .navbar-mobile .mobile-menu-btn:hover {
-    color: var(--color-black) !important;
-  }
-}
-
-/* Hero Section */
-.nx-hero-section {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: var(--spacing-3xl) var(--spacing-2xl);
-  margin-bottom: 0;
-  position: relative;
-  overflow: hidden;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.nx-hero-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--color-gray), transparent);
-  opacity: 0.1;
-}
-
-.nx-hero-section::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--color-gray), transparent);
-  opacity: 0.1;
-}
-
-/* Top Action Buttons */
-.nx-top-actions {
-  position: absolute;
-  top: var(--spacing-lg);
-  right: var(--spacing-lg);
+.profile-header-top {
   display: flex;
-  gap: var(--spacing-sm);
-  z-index: 10;
+  justify-content: flex-end;
+  margin-bottom: 3rem;
 }
 
-.nx-edit-button,
-.nx-logout-button {
+/* Action Buttons */
+.profile-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.profile-icon-btn {
   width: 44px;
   height: 44px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: var(--color-white);
+  color: var(--color-text-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--color-black);
   cursor: pointer;
   transition: var(--transition);
-  font-size: 0.8rem;
-  padding: 0;
-  line-height: 1;
+  font-size: 1.1rem;
+}
+
+.profile-icon-btn:hover {
+  background: var(--color-text-primary);
+  color: var(--color-white);
+  border-color: var(--color-text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-logout-btn {
+  background: var(--color-text-primary);
+  color: var(--color-white);
+  border-color: var(--color-text-primary);
+}
+
+.profile-logout-btn:hover {
+  background: var(--color-text-secondary);
+  border-color: var(--color-text-secondary);
+}
+
+/* Edit Actions */
+.profile-edit-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.profile-btn {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: var(--color-white);
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.profile-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.profile-btn-save {
+  background: var(--color-text-primary);
+  color: var(--color-white);
+  border-color: var(--color-text-primary);
+}
+
+.profile-btn-save:hover {
+  background: var(--color-text-secondary);
+  border-color: var(--color-text-secondary);
+}
+
+.profile-btn-cancel {
+  background: transparent;
+}
+
+.profile-btn-cancel:hover {
+  background: var(--color-bg-accent);
+}
+
+/* User Info */
+.profile-user-info {
   text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.profile-greeting {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 300;
+  color: var(--color-text-light);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.profile-name {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  margin: 0 0 1rem 0;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.profile-name-input {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 1rem;
+  letter-spacing: -0.02em;
+  transition: var(--transition);
+}
+
+.profile-name-input:focus {
+  outline: none;
+  border-bottom-color: var(--color-text-primary);
+  background: rgba(232, 228, 216, 0.3);
+}
+
+.profile-email {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+/* Favorites Section */
+.profile-favorites-section {
+  padding: 4rem 2rem;
+}
+
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Section Header - Elegant & Clean */
+.profile-section-header {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.profile-section-title-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.profile-section-icon {
+  font-size: 1.25rem;
+  color: var(--color-text-primary);
+  opacity: 0.5;
   flex-shrink: 0;
 }
 
-.nx-edit-button svg,
-.nx-logout-button svg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  height: auto;
+.profile-section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 300;
+  color: var(--color-text-secondary);
   margin: 0;
-  padding: 0;
-  position: relative;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  transform: translateX(0);
-  margin-left: 5px;
-}
-
-.nx-edit-button {
-  background: var(--color-white);
-  color: var(--color-black);
-}
-
-.nx-edit-button:hover {
-  background: var(--color-bg-light);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.nx-logout-button {
-  background: var(--color-black);
-  color: var(--color-white);
-}
-
-.nx-logout-button:hover {
-  background: var(--color-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.nx-user-details {
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-}
-
-.nx-user-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-dark);
-  margin: 0 0 var(--spacing-sm) 0;
-  line-height: 1.1;
   letter-spacing: -0.02em;
-  position: relative;
+  flex: 1;
 }
 
-.nx-user-title::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 2px;
-  background: var(--color-black);
-  opacity: 0.6;
-}
-
-.nx-name-editor {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-dark);
-  background: var(--color-white);
-  border: 2px solid var(--color-bg-light);
-  padding: var(--spacing-md) var(--spacing-lg);
-  text-align: center;
-  transition: var(--transition);
-  width: 100%;
-  margin-bottom: var(--spacing-md);
-  letter-spacing: -0.02em;
-}
-
-.nx-name-editor:focus {
-  outline: none;
-  border-color: var(--color-black);
-  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
-}
-
-.nx-user-email {
-  font-size: 1.1rem;
-  color: var(--color-gray);
-  margin: 0 0 var(--spacing-2xl) 0;
-  font-weight: var(--font-weight-normal);
-  letter-spacing: 0.02em;
-}
-
-.nx-action-controls {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-/* Buttons */
-.nx-save-button,
-.nx-cancel-button {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border: none;
-  font-weight: var(--font-weight-medium);
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: var(--transition);
-  font-family: var(--font-primary);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  position: relative;
-  overflow: hidden;
-}
-
-.nx-save-button {
-  background: var(--color-black);
-  color: var(--color-white);
-  border: 1px solid var(--color-black);
-}
-
-.nx-save-button:hover {
-  background: var(--color-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.nx-cancel-button {
-  background: var(--color-white);
-  color: var(--color-gray);
-  border: 1px solid var(--color-bg-dark);
-}
-
-.nx-cancel-button:hover {
-  background: var(--color-bg-light);
-  color: var(--color-dark);
-  transform: translateY(-2px);
-}
-
-.nx-logout-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-  transition: left 0.6s ease;
-}
-
-.nx-logout-button:hover {
-  background: var(--color-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-}
-
-.nx-logout-button:hover::before {
-  left: 100%;
-}
-
-.nx-logout-button:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-.nx-logout-button svg {
-  font-size: 0.9rem;
-  margin-right: var(--spacing-xs);
-  opacity: 0.9;
-}
-
-/* Collections Section */
-.nx-collections-section {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: var(--spacing-3xl) var(--spacing-2xl);
-  position: relative;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.nx-collections-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--color-gray), transparent);
-  opacity: 0.1;
-}
-
-.nx-collections-section::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--color-gray), transparent);
-  opacity: 0.1;
-}
-
-.nx-collections-section > div {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-lg);
-  position: relative;
-  z-index: 2;
-}
-
-@media (max-width: 768px) {
-  .nx-collections-section > div {
-    padding: 0 var(--spacing-md);
-  }
-}
-
-.nx-collections-section {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-3xl);
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-lg);
-}
-
-@media (min-width: 1024px) {
-  .nx-collections-section {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-3xl);
-  }
-}
-
-.nx-collection-card {
+.profile-count-badge {
   background: transparent;
+  color: var(--color-text-muted);
   padding: 0;
-  border: none;
-  position: relative;
-  transition: var(--transition);
+  font-size: 0.875rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  margin-left: auto;
 }
 
-.nx-collection-card:hover {
-  transform: none;
-  box-shadow: none;
+.profile-count-badge::before {
+  content: '(';
 }
 
-/* Collection Header */
-.nx-collection-header {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-2xl);
-  padding-bottom: var(--spacing-lg);
-  border-bottom: 1px solid var(--color-bg-light);
-  position: relative;
+.profile-count-badge::after {
+  content: ')';
 }
 
-.nx-collection-header::after {
+.profile-section-header::after {
   content: '';
   position: absolute;
-  bottom: -1px;
+  bottom: -1rem;
   left: 0;
   width: 40px;
   height: 1px;
-  background: var(--color-black);
-  opacity: 0.6;
+  background: var(--color-text-primary);
+  opacity: 0.3;
 }
 
-.nx-collection-icon {
-  font-size: 1.5rem;
-  color: var(--color-black);
-  opacity: 0.8;
-}
-
-.nx-collection-header h2 {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-dark);
-  margin: 0;
-  flex: 1;
-  letter-spacing: -0.01em;
-}
-
-.nx-collection-count {
-  background: var(--color-bg-light);
-  color: var(--color-gray);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-/* Favorites Grid */
-.nx-favorites-grid {
+/* Recipes Grid */
+.profile-recipes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
-@media (max-width: 768px) {
-  .nx-favorites-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Favorite Item */
-.nx-favorite-item {
-  background: var(--color-off-white);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+/* Recipe Card */
+.profile-recipe-card {
+  background: var(--color-white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   transition: var(--transition);
   position: relative;
   overflow: hidden;
 }
 
-.nx-favorite-item::before {
+.profile-recipe-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--color-gray), transparent);
-  opacity: 0.1;
+  width: 100%;
+  height: 2px;
+  background: var(--color-text-primary);
+  transform: scaleX(0);
+  transition: var(--transition);
 }
 
-.nx-favorite-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+.profile-recipe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.12);
 }
 
-/* Favorite Image Container */
-.nx-favorite-image-container {
+.profile-recipe-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Recipe Image */
+.profile-recipe-image-wrapper {
   position: relative;
-  aspect-ratio: 3/2;
+  aspect-ratio: 4/3;
   overflow: hidden;
+  background: var(--color-bg-accent);
   cursor: pointer;
-  background: var(--color-bg-light);
 }
 
-.nx-favorite-image {
+.profile-recipe-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: var(--transition-slow);
-  filter: grayscale(20%) brightness(0.95);
+  transition: var(--transition);
+  filter: grayscale(10%) brightness(0.98);
 }
 
-.nx-favorite-item:hover .nx-favorite-image {
+.profile-recipe-card:hover .profile-recipe-image {
   transform: scale(1.05);
   filter: grayscale(0%) brightness(1);
 }
 
-.nx-favorite-placeholder {
+.profile-recipe-placeholder {
   display: none;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-bg-light);
-  color: var(--color-light-gray);
-  font-size: 1.5rem;
-}
-
-.nx-favorite-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  color: var(--color-white);
-  display: flex;
+  inset: 0;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  transition: var(--transition);
-  font-weight: var(--font-weight-medium);
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  background: var(--color-bg-accent);
+  color: var(--color-text-muted);
+  font-size: 3rem;
 }
 
-.nx-favorite-item:hover .nx-favorite-overlay {
-  opacity: 1;
+/* Recipe Content */
+.profile-recipe-content {
+  padding: 1.5rem;
 }
 
-/* Favorite Content */
-.nx-favorite-content {
-  padding: var(--spacing-lg);
-}
-
-.nx-favorite-title {
+.profile-recipe-title {
   font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-dark);
-  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  margin: 0 0 0.75rem 0;
   line-height: 1.3;
   letter-spacing: -0.01em;
 }
 
-.nx-favorite-meta {
+.profile-recipe-meta {
   display: flex;
-  gap: var(--spacing-sm);
-  flex-wrap: wrap;
-  font-size: 0.8rem;
-  color: var(--color-gray);
-  font-weight: var(--font-weight-normal);
-  letter-spacing: 0.02em;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  font-weight: 300;
 }
 
-.nx-favorite-meta span {
-  background: var(--color-bg-light);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: 2px;
+.meta-dot {
+  color: var(--color-text-muted);
 }
 
-/* Remove Favorite Button */
-.nx-remove-favorite {
+/* Remove Button */
+.profile-remove-btn {
   position: absolute;
-  top: var(--spacing-sm);
-  right: var(--spacing-sm);
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  color: var(--color-white);
+  border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-gray);
   cursor: pointer;
-  transition: var(--transition);
   opacity: 0;
-  font-size: 0.9rem;
-  backdrop-filter: blur(10px);
+  transition: var(--transition);
+  font-size: 1.1rem;
 }
 
-.nx-favorite-item:hover .nx-remove-favorite {
+.profile-recipe-card:hover .profile-remove-btn {
   opacity: 1;
 }
 
-.nx-remove-favorite:hover {
-  background: var(--color-white);
-  color: #dc2626;
-  transform: scale(1.1);
+.profile-remove-btn:hover {
+  background: #dc2626;
+  transform: scale(1.1) rotate(90deg);
 }
 
 /* Empty State */
-.nx-empty-state {
+.profile-empty-state {
   text-align: center;
-  padding: var(--spacing-3xl) var(--spacing-2xl);
-  color: var(--color-gray);
-  position: relative;
+  padding: 4rem 2rem;
 }
 
-.nx-empty-state::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80px;
-  height: 80px;
-  background: var(--color-bg-light);
-  border-radius: 50%;
-  opacity: 0.5;
-  z-index: -1;
+.empty-icon-wrapper {
+  margin-bottom: 1.5rem;
 }
 
-.nx-empty-icon {
-  font-size: 2.5rem;
-  color: var(--color-light-gray);
-  margin-bottom: var(--spacing-lg);
-  opacity: 0.6;
+.empty-icon {
+  font-size: 4rem;
+  color: var(--color-text-muted);
+  opacity: 0.3;
 }
 
-.nx-empty-state p {
+.empty-message {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.01em;
+}
+
+.empty-submessage {
   font-size: 1rem;
-  margin: 0 0 var(--spacing-lg) 0;
-  color: var(--color-gray);
-  font-weight: var(--font-weight-normal);
+  color: var(--color-text-muted);
+  font-weight: 300;
+  margin: 0 0 2rem 0;
 }
 
-.nx-explore-button {
-  background: var(--color-black);
+.profile-btn-primary {
+  background: var(--color-text-primary);
   color: var(--color-white);
-  border: 1px solid var(--color-black);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  font-size: 0.85rem;
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: var(--transition);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  border-color: var(--color-text-primary);
+  padding: 1rem 2rem;
 }
 
-.nx-explore-button:hover {
-  background: var(--color-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.profile-btn-primary:hover {
+  background: var(--color-text-secondary);
+  border-color: var(--color-text-secondary);
 }
 
-/* Loading and Error States */
-.nx-loading-state {
-  text-align: center;
-  padding: var(--spacing-3xl) var(--spacing-2xl);
-  color: var(--color-gray);
-  font-size: 1.1rem;
-  font-weight: var(--font-weight-normal);
-  background: var(--color-white);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  position: relative;
-}
-
-.nx-loading-state::after {
-  content: '';
-  display: block;
-  width: 40px;
-  height: 40px;
-  border: 2px solid var(--color-bg-light);
-  border-top: 2px solid var(--color-black);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: var(--spacing-lg) auto 0;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
+/* Loading & Error States */
+.nx-loading-state,
 .nx-no-user-state {
-  text-align: center;
-  padding: var(--spacing-3xl) var(--spacing-2xl);
-  color: var(--color-gray);
-  font-size: 1.1rem;
-  background: var(--color-white);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  font-weight: var(--font-weight-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: var(--font-primary);
+  font-size: 1.125rem;
+  color: var(--color-text-muted);
+  background: linear-gradient(45deg, #f8f6f0 0%, #f0ede5 25%, #e8e4d8 50%, #f0ede5 75%, #f8f6f0 100%);
 }
 
-.nx-error-message {
-  text-align: center;
-  padding: var(--spacing-lg) var(--spacing-2xl);
-  margin: var(--spacing-2xl) auto;
-  max-width: 500px;
+.profile-error {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem 1.5rem;
   background: rgba(220, 38, 38, 0.05);
-  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-left: 3px solid #dc2626;
   color: #dc2626;
-  font-weight: var(--font-weight-medium);
+  font-size: 0.95rem;
+  text-align: center;
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .profile-recipes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
-  .nx-top-actions {
-    position: absolute;
-    top: var(--spacing-md);
-    right: var(--spacing-md);
-    display: flex;
-    gap: var(--spacing-xs);
-    z-index: 10;
+  .profile-header {
+    padding: calc(2rem + 60px) 1.5rem 3rem;
   }
   
-  .nx-edit-button,
-  .nx-logout-button {
-    width: 40px;
-    height: 40px;
-    font-size: 0.75rem;
+  .profile-header-top {
+    margin-bottom: 2rem;
   }
   
-  .nx-hero-section {
-    padding: var(--spacing-lg) var(--spacing-md);
-    margin-top: var(--spacing-2xl);
-    padding-top: calc(var(--spacing-2xl) + 60px);
+  .profile-name {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
   }
   
-  .nx-user-title,
-  .nx-name-editor {
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
-    margin-bottom: var(--spacing-sm);
+  .profile-favorites-section {
+    padding: 3rem 1.5rem;
   }
   
-  .nx-user-email {
-    font-size: 1rem;
-    margin-bottom: var(--spacing-lg);
+  .profile-section-header {
+    margin-bottom: 2.5rem;
   }
   
-  .nx-action-controls {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    width: 100%;
+  .profile-section-title-wrapper {
+    flex-wrap: wrap;
   }
   
-  .nx-action-controls > button:not(.nx-edit-button) {
-    width: 100%;
-    max-width: 200px;
-    padding: var(--spacing-sm) var(--spacing-md);
+  .profile-section-title {
+    font-size: 1.5rem;
+  }
+  
+  .profile-section-icon {
+    font-size: 1.125rem;
+  }
+  
+  .profile-count-badge {
     font-size: 0.8rem;
   }
   
-  .nx-edit-button {
-    width: 44px;
-    height: 44px;
-    font-size: 1.1rem;
+  .profile-recipes-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
   
-  .nx-collections-section {
-    padding: var(--spacing-lg) var(--spacing-md);
+  .profile-remove-btn {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.8);
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-header {
+    padding: calc(1.5rem + 60px) 1rem 2.5rem;
   }
   
-  .nx-collection-card {
-    padding: 0;
+  .profile-greeting {
+    font-size: 1rem;
   }
   
-  .nx-collection-header {
-    flex-direction: column;
-    text-align: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-lg);
-    padding-bottom: var(--spacing-md);
+  .profile-name {
+    font-size: 2.25rem;
+    margin-bottom: 0.75rem;
   }
   
-  .nx-collection-header h2 {
-    font-size: 1.1rem;
+  .profile-email {
+    font-size: 0.875rem;
   }
   
-  .nx-collection-icon {
+  .profile-favorites-section {
+    padding: 2.5rem 1rem;
+  }
+  
+  .profile-section-header {
+    margin-bottom: 2rem;
+  }
+  
+  .profile-section-title-wrapper {
+    gap: 0.5rem;
+  }
+  
+  .profile-section-title {
+    font-size: 1.375rem;
+  }
+  
+  .profile-section-icon {
+    font-size: 1rem;
+  }
+  
+  .profile-count-badge {
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+  }
+  
+  .profile-recipe-content {
+    padding: 1.25rem;
+  }
+  
+  .profile-recipe-title {
+    font-size: 1.125rem;
+  }
+  
+  .profile-icon-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .profile-btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.7rem;
+  }
+  
+  .empty-icon {
+    font-size: 3rem;
+  }
+  
+  .empty-message {
     font-size: 1.25rem;
   }
   
-  .nx-collection-count {
-    font-size: 0.7rem;
-    padding: var(--spacing-xs) var(--spacing-sm);
-  }
-  
-  .nx-favorites-grid {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-  }
-  
-  .nx-favorite-item {
-    margin-bottom: var(--spacing-sm);
-  }
-  
-  .nx-favorite-content {
-    padding: var(--spacing-md);
-  }
-  
-  .nx-favorite-title {
-    font-size: 1rem;
-    margin-bottom: var(--spacing-xs);
-  }
-  
-  .nx-favorite-meta {
-    font-size: 0.75rem;
-    gap: var(--spacing-xs);
-  }
-  
-  .nx-favorite-meta span {
-    padding: var(--spacing-xs);
-  }
-  
-  .nx-empty-state {
-    padding: var(--spacing-2xl) var(--spacing-md);
-  }
-  
-  .nx-empty-icon {
-    font-size: 2rem;
-    margin-bottom: var(--spacing-md);
-  }
-  
-  .nx-empty-state p {
+  .empty-submessage {
     font-size: 0.9rem;
-    margin-bottom: var(--spacing-md);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .profile-actions,
+  .profile-edit-actions,
+  .profile-remove-btn,
+  .profile-icon-btn {
+    display: none !important;
   }
   
-  .nx-explore-button {
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: 0.8rem;
+  .profile-page {
+    background: white;
   }
   
-  .nx-collections-section > div {
-    grid-column: 1 / -1;
+  .profile-recipe-card {
+    break-inside: avoid;
   }
 }
