@@ -7,6 +7,7 @@
   background-size: 400% 400%;
   animation: gradientShift 20s ease infinite;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Floating decorative elements */
@@ -467,8 +468,8 @@
   .about-section {
     padding: 0 40px;
     min-height: auto;
-    padding-top: 60px;
-    padding-bottom: 60px;
+    padding-top: 40px;
+    padding-bottom: 40px;
   }
   
   .section-content {
@@ -533,8 +534,8 @@
 @media (max-width: 480px) {
   .about-section {
     padding: 0 20px;
-    padding-top: 80px;
-    padding-bottom: 80px;
+    padding-top: 40px;
+    padding-bottom: 40px;
   }
   
   .about-path-line {

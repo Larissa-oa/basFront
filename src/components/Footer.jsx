@@ -72,7 +72,7 @@ const Footer = () => {
             <h4 className="footer-heading">Personal</h4>
             <ul className="footer-list">
               <li><Link to="/about" className="footer-link">About</Link></li>
-              <li><Link to="/recipes" className="footer-link">Recipes</Link></li>
+              <li><Link to="/recipes" className="footer-link">Food Journal</Link></li>
               <li><a href="mailto:info@restaurantflore.com" className="footer-link">Contact</a></li>
             </ul>
           </div>

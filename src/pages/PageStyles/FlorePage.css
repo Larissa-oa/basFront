@@ -455,14 +455,17 @@ html, body {
 .accolades-container {
   margin: 0 !important;
   margin-top: var(--spacing-3xl) !important;
-  margin-bottom: 0 !important;
+  margin-bottom: var(--spacing-2xl) !important;
   margin-left: calc(-50vw + 50%) !important;
   margin-right: calc(-50vw + 50%) !important;
   width: 100vw !important;
   overflow: hidden;
-  padding: var(--spacing-lg) 0;
+  padding: var(--spacing-2xl) 0;
   border-radius: 0;
   position: relative;
+  min-height: 240px;
+  opacity: 1;
+  visibility: visible;
 }
 
 .accolades-container::before {
@@ -472,69 +475,85 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .accolades-track {
   position: relative;
-  height: 140px;
+  height: 180px;
   display: flex;
   align-items: center;
   overflow: hidden;
+  z-index: 10;
+  opacity: 1;
+  visibility: visible;
 }
 
 .accolades-slide {
   display: flex;
   align-items: center;
-  gap: 40px;
-  padding: 0 40px;
+  gap: 60px;
+  padding: 0 60px;
   transition: transform 0.1s ease-out;
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  position: relative;
+  z-index: 10;
+  opacity: 1;
+  visibility: visible;
 }
 
 .accolades-slide:active {
   cursor: grabbing;
 }
 
-
 .accolade-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-sm);
+  padding: 1.5rem;
   height: 160px;
-  width: 240px;
+  flex-shrink: 0;
+  width: 280px;
   background: transparent;
-  border-radius: var(--border-radius);
   transition: var(--transition);
   border: none;
-  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  opacity: 1;
+  visibility: visible;
 }
 
 .accolade-link:hover {
-  transform: translateY(-2px) scale(1.05);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  transform: translateY(-4px) scale(1.08);
 }
 
 .accolade-img {
-  max-height: 100px;
-  max-width: 200px;
+  max-height: 120px;
+  max-width: 240px;
   width: auto;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+  filter: brightness(1.4) contrast(1.15) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
   transition: var(--transition);
   vertical-align: middle;
+  position: relative;
+  z-index: 10;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  will-change: transform;
 }
 
 .accolade-link:hover .accolade-img {
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
+  filter: brightness(1.5) contrast(1.2) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+  transform: scale(1.05);
 }
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -576,6 +595,33 @@ html, body {
   .dining-grid {
     grid-template-columns: 1fr;
     gap: var(--spacing-2xl);
+  }
+  
+  .accolades-container {
+    padding: var(--spacing-xl) 0;
+    min-height: 200px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  
+  .accolades-track {
+    height: 160px;
+  }
+  
+  .accolades-slide {
+    gap: 40px;
+    padding: 0 40px;
+  }
+  
+  .accolade-link {
+    width: 240px;
+    height: 140px;
+    padding: 1rem;
+  }
+  
+  .accolade-img {
+    max-height: 100px;
+    max-width: 200px;
   }
   
   .dining-item {
@@ -640,6 +686,31 @@ html, body {
   
   .dining-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .accolades-container {
+    padding: var(--spacing-lg) 0;
+    min-height: 180px;
+  }
+  
+  .accolades-track {
+    height: 140px;
+  }
+  
+  .accolades-slide {
+    gap: 30px;
+    padding: 0 30px;
+  }
+  
+  .accolade-link {
+    width: 200px;
+    height: 120px;
+    padding: 0.75rem;
+  }
+  
+  .accolade-img {
+    max-height: 80px;
+    max-width: 160px;
   }
   
   .accolade-slide {
