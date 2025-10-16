@@ -557,7 +557,7 @@ html, body {
 /* Responsive Design */
 @media (max-width: 768px) {
   .hero-container {
-    height: 70vh;
+    height: 100vh;
     min-height: 400px;
   }
   
@@ -686,7 +686,7 @@ html, body {
 
 @media (max-width: 480px) {
   .hero-container {
-    height: 70vh;
+    height: 100vh;
     min-height: 350px;
   }
   
