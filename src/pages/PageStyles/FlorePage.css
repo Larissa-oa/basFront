@@ -562,7 +562,7 @@ html, body {
   }
   
   .philosophy-section {
-    margin-top: calc(95vh - 100px);
+    margin-top: calc(95vh + 40px);
   }
   
   .flore-path-line {
@@ -691,7 +691,7 @@ html, body {
   }
   
   .philosophy-section {
-    margin-top: calc(95vh - 80px);
+    margin-top: calc(95vh + 40px);
   }
   
   .flore-path-line {
