@@ -78,6 +78,9 @@ const FlorePage = () => {
     const slider = accoladesSlide.current
     if (!slider) return
 
+    // Ensure slider starts visible at initial position
+    slider.style.transform = 'translateX(0px)'
+
     const handleMouseDown = (e) => {
       isDragging.current = true
       slider.style.cursor = 'grabbing'

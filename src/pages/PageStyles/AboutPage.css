@@ -516,12 +516,20 @@
     padding: 0 var(--spacing-md);
   }
   
+  /* Keep progress line and numbers visible on mobile */
   .about-path-line {
-    display: none;
+    display: block;
+    right: 20px;
+    width: 2px;
+    opacity: 0.8;
   }
   
   .section-number {
-    display: none;
+    display: block;
+    right: 16px;
+    font-size: 12px;
+    padding: 6px 10px;
+    opacity: 0.9;
   }
   
   .floating-element {
