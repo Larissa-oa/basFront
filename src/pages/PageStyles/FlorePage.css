@@ -591,6 +591,15 @@ html, body {
     padding: var(--spacing-xl) 0;
   }
   
+  .philosophy-text blockquote {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
+  
+  .philosophy-text cite {
+    margin-left: var(--spacing-md);
+  }
+  
   .dining-section {
     padding: var(--spacing-2xl) 0;
   }
@@ -710,6 +719,12 @@ html, body {
   
   .philosophy-text blockquote {
     font-size: 1rem;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
+  
+  .philosophy-text cite {
+    margin-left: var(--spacing-md);
   }
   
   .dining-section {
