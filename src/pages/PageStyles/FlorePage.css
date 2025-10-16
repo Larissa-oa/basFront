@@ -588,7 +588,7 @@ html, body {
   }
   
   .section-container {
-    padding: var(--spacing-xl) var(--spacing-sm);
+    padding: var(--spacing-xl) 0;
   }
   
   .dining-section {
@@ -624,12 +624,13 @@ html, body {
   }
   
   .accolades-container {
-    padding: var(--spacing-xl) 0;
+    padding: var(--spacing-md) 0;
     min-height: 200px;
     overflow-x: auto;
     overflow-y: hidden;
     opacity: 1 !important;
     visibility: visible !important;
+    -webkit-overflow-scrolling: touch;
   }
   
   .accolades-track {
@@ -639,8 +640,8 @@ html, body {
   }
   
   .accolades-slide {
-    gap: 40px;
-    padding: 0 40px;
+    gap: 24px;
+    padding: 0 24px;
   }
   
   .accolade-link {
@@ -747,10 +748,11 @@ html, body {
   }
   
   .accolades-container {
-    padding: var(--spacing-lg) 0;
+    padding: var(--spacing-md) 0;
     min-height: 180px;
     opacity: 1 !important;
     visibility: visible !important;
+    -webkit-overflow-scrolling: touch;
   }
   
   .accolades-track {

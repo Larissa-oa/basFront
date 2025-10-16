@@ -31,6 +31,7 @@ const FlorePage = () => {
   const scrollLeft = useRef(0)
 
   useEffect(() => {
+    const isDesktop = window.innerWidth > 768
     const handleScroll = () => {
       const scrollY = window.scrollY
       const windowHeight = window.innerHeight
@@ -51,12 +52,11 @@ const FlorePage = () => {
         pathLine.style.height = `${smoothProgress * 100}%`
       }
 
-      // Control accolades slider based on scroll direction
-      if (accoladesSlide.current && !isDragging.current) {
+      // On desktop only, nudge accolades slide for subtle motion
+      if (isDesktop && accoladesSlide.current && !isDragging.current) {
         const currentTransform = accoladesSlide.current.style.transform || 'translateX(0px)'
         const currentX = parseFloat(currentTransform.match(/-?\d+\.?\d*/)?.[0] || 0)
-        const newX = currentX + (direction * 5) // Increased from 2px to 5px for faster movement
-        
+        const newX = currentX + (direction * 5)
         accoladesSlide.current.style.transform = `translateX(${newX}px)`
       }
     }
@@ -73,8 +73,15 @@ const FlorePage = () => {
     }
   }, [])
 
-  // Drag/Swipe functionality
+  // Drag/Swipe functionality (desktop only)
   useEffect(() => {
+    if (window.innerWidth <= 768) {
+      // Ensure starting position on mobile and rely on native scroll
+      if (accoladesSlide.current) {
+        accoladesSlide.current.style.transform = 'translateX(0px)'
+      }
+      return
+    }
     const slider = accoladesSlide.current
     if (!slider) return
 
