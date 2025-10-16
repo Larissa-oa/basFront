@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaTrash, FaPen, FaPlus, FaHeart, FaSearch, FaTimes } from 'react-icons/fa';
+import { FaTrash, FaPen, FaPlus, FaHeart, FaSearch, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { scrollToTop } from '../utils/scrollToTop';
 import CreateRecipeModal from '../components/CreateRecipeModal';
 import API_BASE_URL from '../config/api.js';
@@ -15,6 +15,9 @@ const RecipePage = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [error, setError] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const ITEMS_PER_PAGE = 9;
 
   const [likedRecipes, setLikedRecipes] = useState(new Set());
   const [editingRecipe, setEditingRecipe] = useState(null);
@@ -42,6 +45,11 @@ const RecipePage = () => {
       setLikedRecipes(new Set(user.favoriteRecipes.map(id => id.toString())));
     }
   }, [user]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, sortBy]);
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this recipe?')) return;
@@ -99,6 +107,19 @@ const RecipePage = () => {
         return dateB - dateA; // Default to newest
     }
   });
+
+  // Pagination calculations
+  const totalPages = Math.max(1, Math.ceil(sortedRecipes.length / ITEMS_PER_PAGE));
+  const clampedCurrentPage = Math.min(currentPage, totalPages);
+  const startIndex = (clampedCurrentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedRecipes = sortedRecipes.slice(startIndex, endIndex);
+
+  const goToPage = (page) => {
+    const next = Math.min(Math.max(1, page), totalPages);
+    setCurrentPage(next);
+    scrollToTop();
+  };
 
   // Modal handlers
   const openCreateModal = () => {
@@ -179,7 +200,7 @@ const RecipePage = () => {
           </div>
       ) : (
         <div className="recipe-grid">
-          {sortedRecipes.map(recipe => (
+          {paginatedRecipes.map(recipe => (
             <article key={recipe._id} className="recipe-card">
               <div className="recipe-card-inner">
                 <div className="recipe-image-container">
@@ -245,6 +266,37 @@ const RecipePage = () => {
             </article>
           ))}
         </div>
+      )}
+
+      {sortedRecipes.length > ITEMS_PER_PAGE && (
+        <nav className="pagination" aria-label="Recipes pagination">
+          <button
+            className="page-button prev"
+            onClick={() => goToPage(clampedCurrentPage - 1)}
+            disabled={clampedCurrentPage === 1}
+            aria-label="Previous page"
+          >
+            <FaChevronLeft />
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              className={`page-button number ${page === clampedCurrentPage ? 'active' : ''}`}
+              onClick={() => goToPage(page)}
+              aria-current={page === clampedCurrentPage ? 'page' : undefined}
+            >
+              {page}
+            </button>
+          ))}
+          <button
+            className="page-button next"
+            onClick={() => goToPage(clampedCurrentPage + 1)}
+            disabled={clampedCurrentPage === totalPages}
+            aria-label="Next page"
+          >
+            <FaChevronRight />
+          </button>
+        </nav>
       )}
 
         <CreateRecipeModal

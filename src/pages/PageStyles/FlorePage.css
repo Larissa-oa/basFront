@@ -542,7 +542,6 @@ html, body {
   object-fit: contain;
   filter: brightness(1.4) contrast(1.15) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
   transition: var(--transition);
-  vertical-align: middle;
   position: relative;
   z-index: 10;
   display: block;
@@ -592,9 +591,35 @@ html, body {
     padding: var(--spacing-xl) var(--spacing-sm);
   }
   
+  .dining-section {
+    padding: var(--spacing-2xl) 0;
+  }
+  
   .dining-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-2xl);
+    gap: var(--spacing-3xl);
+  }
+  
+  .dining-item {
+    gap: 0;
+  }
+  
+  .card-image {
+    height: 60vh;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
+    border-radius: 0;
+  }
+  
+  .card-content {
+    padding: var(--spacing-lg) var(--spacing-md);
+    margin-top: 0;
+  }
+  
+  .card-meta {
+    top: var(--spacing-md);
+    right: var(--spacing-md);
   }
   
   .accolades-container {
@@ -622,14 +647,6 @@ html, body {
   .accolade-img {
     max-height: 100px;
     max-width: 200px;
-  }
-  
-  .dining-item {
-    gap: var(--spacing-md);
-  }
-  
-  .card-image {
-    height: 300px;
   }
   
   .card-content h3 {
@@ -684,8 +701,38 @@ html, body {
     font-size: 1rem;
   }
   
+  .dining-section {
+    padding: var(--spacing-xl) 0;
+  }
+  
   .dining-grid {
     grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+  }
+  
+  .dining-item {
+    gap: 0;
+  }
+  
+  .card-image {
+    height: 65vh;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
+    border-radius: 0;
+  }
+  
+  .card-content {
+    padding: var(--spacing-md);
+    margin-top: 0;
+  }
+  
+  .card-content h3 {
+    font-size: 1.5rem;
+  }
+  
+  .card-content p {
+    font-size: 0.9rem;
   }
   
   .accolades-container {

@@ -6,7 +6,7 @@ import RecipeSlider from '../components/RecipeSlider';
 import ScrollEffects from '../components/ScrollEffects';
 import HomepageBar from '../components/HomepageBar';
 import AboutTeaser from '../components/AboutTeaser';
-import flore from '../assets/images/flore.jpg';
+import flore from '../assets/images/image6.jpg';
 import restaurant from '../assets/images/restaurant.jpg';
 import dining from '../assets/images/dining.jpg';
 import floreVideo from '../assets/videos/Flore_homepage.mp4';
@@ -148,6 +148,14 @@ const Homepage = () => {
                   </button>
                 </div>
               </div>
+              
+              <button className="explore-button flore-explore-button-mobile" onClick={() => {
+                scrollToTop();
+                navigate('/flore');
+              }}>
+                Visit Restaurant Flore
+                <ArrowRight size={16} />
+              </button>
             </div>
           </div>
         </section>

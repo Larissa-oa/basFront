@@ -1,6 +1,6 @@
 .about-teaser {
   position: relative;
-  margin: var(--spacing-3xl) auto;
+  margin: var(--spacing-xl) auto var(--spacing-3xl);
   width: min(1200px, calc(100% - 4rem));
   padding: clamp(24px, 3.2vw, 40px) clamp(24px, 4vw, 48px);
   border-radius: 0; /* minimal frame */
@@ -76,7 +76,13 @@
 @media (max-width: 768px) {
   .about-teaser {
     width: calc(100% - 2rem);
-    margin: var(--spacing-2xl) auto;
+    margin: var(--spacing-sm) auto var(--spacing-2xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .about-teaser {
+    margin: var(--spacing-xs) auto var(--spacing-xl);
   }
 }
 

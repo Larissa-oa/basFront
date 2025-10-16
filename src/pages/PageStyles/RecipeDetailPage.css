@@ -61,6 +61,7 @@
 
 /* Main Image Section */
 .recipe-main-image {
+  position: relative;
   aspect-ratio: 2/3;
   background-color: #fafafa;
   overflow: hidden;
@@ -105,31 +106,40 @@
   gap: 2.5rem;
 }
 
-/* Back Button */
+/* Back Button - Positioned on Image */
 .back-btn {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #6b4423;
-  background: none;
-  border: none;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
-  font-weight: 400;
-  font-size: 0.8rem;
+  font-weight: 500;
+  font-size: 0.85rem;
   letter-spacing: 0.05em;
-  transition: color 0.2s ease;
-  align-self: flex-start;
-  padding: 0;
-  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  z-index: 10;
+  text-transform: uppercase;
+  font-size: 0.75rem;
 }
 
 .back-btn:hover {
-  color: #2c1810;
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  transform: translateX(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .back-icon {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.85rem;
+  height: 0.85rem;
 }
 
 /* Recipe Title */

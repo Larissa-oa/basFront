@@ -10,8 +10,6 @@ import FlorePage from './pages/FlorePage';
 import RecipesPage from './pages/RecipesPage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
-import JournalPage from './pages/JournalPage';
-import JournalDetailPage from './pages/JournalDetailPage';
 import RecipeDetailPage from './pages/RecipeDetailPage';
 import ProfilePage from './pages/ProfilePage';
 
@@ -36,8 +34,6 @@ function App() {
           <Route path="/recipes/:id" element={<RecipeDetailPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/journals" element={<JournalPage />} />
-          <Route path="/journals/:id" element={<JournalDetailPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           {/* Add more routes as needed */}
         </Routes>

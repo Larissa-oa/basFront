@@ -78,6 +78,7 @@
   opacity: 0;
   transform: translateY(50px) scale(0.95);
   transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  scroll-snap-align: start;
 }
 
 .about-section.section-active {
@@ -467,21 +468,22 @@
 
 @media (max-width: 768px) {
   .about-page {
-    overflow-y: scroll;
+    overflow: visible;
     height: auto;
   }
   
   .about-section {
-    padding: 0 40px;
+    padding: 0;
     min-height: auto;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    touch-action: pan-y;
+    padding-top: var(--spacing-2xl);
+    padding-bottom: var(--spacing-2xl);
+    touch-action: auto;
+    scroll-snap-align: none;
   }
   
   .section-content {
     flex-direction: column !important;
-    gap: 30px;
+    gap: 0;
   }
   
   /* Force Flore section to show image first, then text on mobile */
@@ -490,84 +492,36 @@
     display: flex !important;
   }
   
-  .flore-image-container {
+  .intro-image-container,
+  .journey-image-container,
+  .flore-image-container,
+  .ambassador-image-container {
     order: 1 !important;
-  }
-  
-  .flore-text {
-    order: 2 !important;
+    height: 70vh;
+    transform: none;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: var(--spacing-lg);
   }
   
   .intro-text,
   .journey-text,
   .flore-text,
   .ambassador-text {
+    order: 2 !important;
     max-width: 100%;
+    padding: 0 var(--spacing-md);
   }
   
   .about-path-line {
-    right: 30px;
-    pointer-events: none;
-  }
-  
-  .section-number {
-    right: 15px;
-    font-size: 14px;
-    pointer-events: none;
-  }
-  
-  .floating-element {
     display: none;
   }
   
-  .intro-image-container,
-  .journey-image-container,
-  .flore-image-container,
-  .ambassador-image-container {
-    height: 350px;
-    transform: none;
-  }
-  
-  .final-image-container {
-    height: 0;
-    margin: 0 20px;
-  }
-  
-  .final-quote {
-    bottom: 30px;
-    padding: 2rem 2.5rem;
-    margin: 0 20px;
-  }
-  
-  .final-quote p {
-    font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .about-page {
-    overflow-y: scroll;
-    height: auto;
-  }
-  
-  .about-section {
-    padding: 0 20px;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    min-height: auto;
-    touch-action: pan-y;
-  }
-  
-  .about-path-line {
-    right: 15px;
-    pointer-events: none;
-  }
-  
   .section-number {
-    right: 0;
-    font-size: 12px;
-    padding: 6px 10px;
-    pointer-events: none;
+    display: none;
   }
   
   .floating-element {
@@ -575,24 +529,102 @@
   }
   
   .section-title {
-    font-size: 2.8rem;
+    font-size: clamp(2rem, 6vw, 2.5rem);
+    margin-bottom: 1rem;
   }
   
   .section-subtitle {
-    font-size: 2.2rem;
+    font-size: clamp(1.75rem, 5vw, 2rem);
+    margin-bottom: 1rem;
   }
   
   .section-description {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    line-height: 1.7;
   }
   
   .michelin-quote {
-    font-size: 1.1rem;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .final-image-container {
+    height: 0;
+    margin: 0;
+  }
+  
+  .final-quote {
+    bottom: 30px;
     padding: 1.5rem 2rem;
+    margin: 0 var(--spacing-md);
+  }
+  
+  .final-quote p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-page {
+    overflow: visible;
+    height: auto;
+  }
+  
+  .about-section {
+    padding: 0;
+    padding-top: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+    min-height: auto;
+    touch-action: auto;
+  }
+  
+  .intro-image-container,
+  .journey-image-container,
+  .flore-image-container,
+  .ambassador-image-container {
+    height: 60vh;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .intro-text,
+  .journey-text,
+  .flore-text,
+  .ambassador-text {
+    padding: 0 var(--spacing-sm);
+  }
+  
+  .section-title {
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+    margin-bottom: 0.75rem;
+  }
+  
+  .section-subtitle {
+    font-size: clamp(1.5rem, 6vw, 1.875rem);
+    margin-bottom: 0.75rem;
+  }
+  
+  .section-description {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+  
+  .michelin-quote {
+    font-size: 0.95rem;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
   }
   
   .michelin-quote::before {
-    font-size: 4rem;
+    font-size: 3rem;
+  }
+  
+  .final-quote {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .final-quote p {
+    font-size: 1rem;
   }
 }
 

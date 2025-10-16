@@ -261,12 +261,12 @@ html {
 
 .section.recipes {
   background: transparent;
-  padding: var(--spacing-2xl) 0 var(--spacing-lg) 0;
+  padding: calc(var(--spacing-3xl) + var(--spacing-xl)) 0 var(--spacing-3xl) 0;
 }
 
 .section.flore {
   background: transparent;
-  padding: var(--spacing-lg) 0;
+  padding: var(--spacing-2xl) 0 var(--spacing-md) 0;
 }
 
 .section.flore::before {
@@ -291,6 +291,10 @@ html {
   opacity: 1;
   transform: translateX(0);
   transition: var(--transition);
+}
+
+.flore-explore-button-mobile {
+  display: none;
 }
 
 .section.flore.in-view .flore-section {
@@ -319,16 +323,20 @@ html {
   height: 100%;
   object-fit: cover;
   transition: opacity 0.5s ease;
+  display: block;
 }
 
 .flore-image.active {
   opacity: 1;
+  position: relative;
 }
 
 .flore-image.inactive {
   opacity: 0;
   position: absolute;
   inset: 0;
+  top: 0;
+  left: 0;
 }
 
 .flore-controls {
@@ -412,8 +420,8 @@ html {
   }
   
   .hero {
-    height: calc(80vh - 56px);
-    min-height: calc(80vh - 56px);
+    height: 85vh;
+    min-height: 500px;
   }
   
   .hero-content {
@@ -440,7 +448,7 @@ html {
   }
   
   .scroll-line {
-    height: 100px;
+    height: 60px;
   }
   
   .scroll-text {
@@ -452,31 +460,65 @@ html {
   }
   
   .section.recipes {
-    padding: var(--spacing-xl) 0 var(--spacing-lg) 0;
+    padding: calc(var(--spacing-2xl) + var(--spacing-md)) 0 var(--spacing-lg) 0;
   }
   
+  .section.flore {
+    padding: var(--spacing-xl) 0;
+  }
   
   .flore-section {
-    gap: var(--spacing-md);
+    gap: 0;
     grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
   }
   
   .flore-section .section-header-content {
     order: 1;
-    padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
-    text-align: center;
-    max-width: calc(100vw - 2 * var(--spacing-md));
-    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    text-align: left;
+    max-width: 100%;
+    margin: 0 0 var(--spacing-lg) 0;
+    min-height: auto;
+  }
+  
+  .flore-section .slider-title {
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .flore-section #flore-intro {
+    display: block;
+    margin-bottom: 0;
+  }
+  
+  .flore-section .section-header-content .explore-button {
+    display: none;
   }
   
   .flore-image-container {
     order: 2;
-    height: 300px;
+    height: 60vh;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
+    border-radius: 0;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .flore-explore-button-mobile {
+    order: 3;
+    display: inline-flex;
+    margin: 0 auto var(--spacing-sm);
   }
 }
 
 @media (max-width: 480px) {
+  .hero {
+    height: 90vh;
+    min-height: 550px;
+  }
+  
   .hero-content {
     padding: 0 var(--spacing-sm);
     left: 6%;
@@ -484,10 +526,10 @@ html {
   }
   
   .hero-title {
-    font-size: clamp(1.6rem, 6.5vw, 2.2rem);
+    font-size: clamp(1.8rem, 7vw, 2.5rem);
     margin-bottom: var(--spacing-md);
-    letter-spacing: 0.03em;
-    line-height: 1.4;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
     padding-right: var(--spacing-sm);
   }
   
@@ -498,7 +540,7 @@ html {
   }
   
   .scroll-line {
-    height: 80px;
+    height: 50px;
   }
   
   .scroll-text {
@@ -510,31 +552,59 @@ html {
   }
   
   .section.recipes {
-    padding: var(--spacing-lg) 0 var(--spacing-md) 0;
+    padding: calc(var(--spacing-xl) + var(--spacing-md)) 0 var(--spacing-md) 0;
   }
   
+  .section.flore {
+    padding: var(--spacing-xl) 0;
+  }
   
   .flore-section {
-    gap: var(--spacing-md);
-    grid-template-columns: 1fr;
+    gap: 0;
+    display: flex;
+    flex-direction: column;
   }
 
   #flore-intro {
     max-width: 100%;
+    display: block;
   }
   
   .flore-section .section-header-content {
     order: 1;
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
+    padding: 0 var(--spacing-md);
     text-align: left;
-    max-width: calc(100vw - 2 * var(--spacing-sm));
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0 0 var(--spacing-md) 0;
+    min-height: auto;
+  }
+  
+  .flore-section .slider-title {
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .flore-section #flore-intro {
+    margin-bottom: 0;
+  }
+  
+  .flore-section .section-header-content .explore-button {
+    display: none;
   }
   
   .flore-image-container {
     order: 2;
-    height: 250px;
+    height: 65vh;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
+    border-radius: 0;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .flore-explore-button-mobile {
+    order: 3;
+    display: inline-flex;
+    margin: 0 auto var(--spacing-xs);
   }
 }
 

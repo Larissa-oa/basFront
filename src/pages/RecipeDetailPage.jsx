@@ -237,6 +237,10 @@ const RecipeDetailPage = () => {
     <article className="recipe-detail-page">
       <div className="recipe-layout">
         <div className="recipe-main-image">
+          <button className="back-btn" onClick={() => navigate('/recipes')}>
+            <FaArrowLeft className="back-icon" />
+            Back
+          </button>
           {recipe.headerImage ? (
             <img src={recipe.headerImage.startsWith('http') ? recipe.headerImage : `${API_BASE_URL}${recipe.headerImage}`} alt={recipe.title} />
           ) : (
@@ -245,7 +249,6 @@ const RecipeDetailPage = () => {
         </div>
 
         <div className="recipe-content">
-          <button className="back-btn" onClick={() => navigate('/recipes')}>← Back</button>
           <span className="recipe-title" id="recipe-title">{recipe.title}</span>
 
           <div className="recipe-meta">
