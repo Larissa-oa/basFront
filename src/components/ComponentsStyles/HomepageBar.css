@@ -86,7 +86,7 @@
 
 @media (max-width: 768px) {
   .homepage-bar {
-    height: 15vh;
+    height: calc(15vh - 10px);
     min-height: 90px;
   }
 
@@ -103,7 +103,7 @@
 
 @media (max-width: 480px) {
   .homepage-bar {
-    height: 15vh;
+    height: calc(15vh - 10px);
     min-height: 95px;
   }
 

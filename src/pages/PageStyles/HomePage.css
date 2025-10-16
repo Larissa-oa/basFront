@@ -420,7 +420,7 @@ html {
   }
   
   .hero {
-    height: 85vh;
+    height: calc(85vh - 54px);
     min-height: 500px;
   }
   
@@ -515,7 +515,7 @@ html {
 
 @media (max-width: 480px) {
   .hero {
-    height: 85vh;
+    height: calc(85vh - 54px);
     min-height: 550px;
   }
   
@@ -627,7 +627,7 @@ html {
 /* Mobile Hero Video Cropping */
 @media (max-width: 768px) {
   .hero {
-    height: 85vh;
+    height: calc(85vh - 54px);
     min-height: 450px;
   }
   
