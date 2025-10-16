@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background:  #371103 ;
+  background:  #4c0b01 ;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
   left: 50%;
@@ -22,11 +22,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse 80% 50% at 50% 0%,
-    rgba(122, 85, 72, 0.15) 0%,
-    transparent 100%
-  );
+  background:  #4c0b01 ;
+
+
   pointer-events: none;
 }
 
@@ -88,8 +86,8 @@
 
 @media (max-width: 768px) {
   .homepage-bar {
-    height: calc(20vh - 14px);
-    min-height: 120px;
+    height: 15vh;
+    min-height: 90px;
   }
 
   .homepage-bar-content {
@@ -105,8 +103,8 @@
 
 @media (max-width: 480px) {
   .homepage-bar {
-    height: calc(20vh - 14px);
-    min-height: 140px;
+    height: 15vh;
+    min-height: 95px;
   }
 
   .homepage-bar-content {

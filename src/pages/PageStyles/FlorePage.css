@@ -557,12 +557,12 @@ html, body {
 /* Responsive Design */
 @media (max-width: 768px) {
   .hero-container {
-    height: 95vh;
+    height: 90vh;
     min-height: 400px;
   }
   
   .philosophy-section {
-    margin-top: calc(95vh + 40px);
+    margin-top: calc(90vh + 40px);
   }
   
   .flore-path-line {
